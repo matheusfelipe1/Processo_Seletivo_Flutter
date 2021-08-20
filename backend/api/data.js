@@ -64,15 +64,36 @@ module.exports = app => {
         let somatorioMortes = 0
         let somatorioCasosConfirmados = 0
         let somatorioRecuperados = 0
-        await connections.query('SELECT * FROM media_movel_datas_respectivas', function (error, results) {
-            if(error) return res.send(error)
-            results.map((dados, index) => {
-                somatorioMortes = eval(`${dados['totalDeath']}+${somatorioMortes}`)
-                somatorioRecuperados = eval(`${dados['totalRecovered']}+${somatorioRecuperados}`)
-                somatorioCasosConfirmados = eval(`${dados['totalCasesConfirmed']}+${somatorioCasosConfirmados}`)
-            })
-            res.json([somatorioMortes, somatorioCasosConfirmados, somatorioRecuperados])
+        var dadosObtidosRequisicao = []
+        await connections.query('SELECT * FROM media_movel_datas_respectivas', 
+            function (error, results) {
+                if(error) return res.send(error)
+                results.map((dados, index) => {
+                    somatorioMortes = eval(`${dados['totalDeath']}+${somatorioMortes}`)
+                    somatorioRecuperados = eval(`${dados['totalRecovered']}+${somatorioRecuperados}`)
+                    somatorioCasosConfirmados = eval(`${dados['totalCasesConfirmed']}+${somatorioCasosConfirmados}`)
+                })
+              
+                connections.query(
+                    'SELECT * FROM covidbrasil WHERE Date = "'+ data +'"',
+                    function(err, results, fields){
+                        if (err) return res.send(err);
+
+                        results.map((dados, index) => {
+                            dadosObtidosRequisicao = dados
+                        })
+                        res.json([somatorioMortes, somatorioCasosConfirmados, 
+                            somatorioRecuperados, dadosObtidosRequisicao])
+                       
+                    }
+                    
+                ) 
+
         })
+
+        
+       
+
     }
 
     return {mostraTodos, mediaDeMortes, buscarDadosDasMedias}
