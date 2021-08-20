@@ -3,5 +3,5 @@ module.exports = app => {
         .get(app.api.data.mostraTodos)
 
     app.route('/get')
-        .post(app.api.data.data)
+        .post(app.api.data.mediaDeMortes)
 }

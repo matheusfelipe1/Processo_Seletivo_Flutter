@@ -18,22 +18,28 @@ module.exports = app => {
                         .then(() => res.send('deu certo'))
                         .catch(err => res.send('erro!'))
                     }
-               
-
             })
 
     }  
 
-    const data = async (req, res) => {
-        var valorData = {...req.body}
+    const mediaDeMortes = async (req, res) => {
+                var valorData = {...req.body}
                 var data = `${valorData.data1}T00:00:00Z`
                 var data2 = `${valorData.data2}T00:00:00Z`
-                connections.query( 'SELECT * FROM covidbrasil WHERE Date >= "'+data+'" AND Date <= "'+data2+'" ORDER BY Date', function (error, results, fields) {
-                    if (error) res.send(error)
-                    res.send(results)
-                  });
-              console.log('Connected!:)');
-    }       
+                connections.query( 'SELECT * FROM covidbrasil WHERE Date >= "'+data+'" AND Date <= "'+data2+'" ORDER BY Date', 
+                    function (error, results) {
+                 
+                        if (error) res.send(error)
+                        let mortes = 0
+                        results.map((user, index) => {
+                             mortes +=  user['Deaths']
+                            
+                        })
+                         res.send(String (mortes / 14))
+                    });
 
-    return {mostraTodos, data}
+                } 
+         
+
+    return {mostraTodos, mediaDeMortes}
 }
