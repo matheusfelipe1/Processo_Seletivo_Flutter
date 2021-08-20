@@ -1,7 +1,10 @@
 module.exports = app => {
-    app.route('/user')
+    app.route('/obterlista')
         .get(app.api.data.mostraTodos)
 
-    app.route('/get')
+    app.route('/obtermedia')
         .post(app.api.data.mediaDeMortes)
+    
+    app.route('/obterdadosmedia')
+        .post(app.api.data.buscarDadosDasMedias)
 }
