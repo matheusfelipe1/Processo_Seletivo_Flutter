@@ -4,19 +4,16 @@ const mysql = require('mysql');
 module.exports = app => {
     var connections = mysql.createConnection(connection)
     const mostraTodos = async (req, res, next) => {
-        
+        await connections.query('TRUNCATE TABLE covidbrasil', function (error, results) {
+            if(error) return res.send(error)
+        })
         await axios.get('https://api.covid19api.com/country/brazil?from=2021-02-01T00:00:00Z&to=2021-08-19T00:00:00Z')
-            .then(resp => {
-              
-                    for (var i = 0; i <= resp.data.length; i++)  {
-                    const validate =  app.db('covidbrasil').where({'ID': resp.data[i]['ID']}).first()
-                    if (validate == true) {
-                        return
-                    }
-                        app.db('covidbrasil')
-                        .insert(resp.data[i])
-                        .then(() => res.send('deu certo'))
-                        .catch(err => res.send('erro!'))
+            .then(resposta => {                
+                        for ( var i in resposta.data) {
+                            app.db('covidbrasil')
+                            .insert(resposta.data[i])
+                            .then(() => res.send())
+                            .catch(err => res.send(err))
                     }
             })
 
@@ -26,16 +23,22 @@ module.exports = app => {
                 var valorData = {...req.body}
                 var data = `${valorData.data1}T00:00:00Z`
                 var data2 = `${valorData.data2}T00:00:00Z`
+                connections.query('TRUNCATE TABLE dados_medias_solicitadas', function (error, results) {
+                    if(error) return res.send(error)
+                })
                 connections.query( 'SELECT * FROM covidbrasil WHERE Date >= "'+data+'" AND Date <= "'+data2+'" ORDER BY Date', 
-                    function (error, results) {
-                 
-                        if (error) res.send(error)
+                    function (error, results)  {
+                        if (error) return res.send(error)
                         let mortes = 0
+                        
                         results.map((user, index) => {
-                             mortes +=  user['Deaths']
-                            
+                            mortes +=  user['Deaths']
+                             app.db('dados_medias_solicitadas')
+                                    .insert(user)
+                                    .then(() => res.json())
+                                    .catch(err => res.json('Erro!'))
                         })
-                         res.send(String (mortes / 14))
+                         res.json(mortes / 14)
                     });
 
                 } 
