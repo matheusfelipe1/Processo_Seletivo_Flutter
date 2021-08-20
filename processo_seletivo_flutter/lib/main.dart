@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:processo_seletivo_flutter/components/pages/TelaInicial.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,29 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: NewScreen(),
-    );
-  }
-}
-
-class NewScreen extends StatefulWidget {
-  const NewScreen({Key? key}) : super(key: key);
-
-  @override
-  _NewScreenState createState() => _NewScreenState();
-}
-
-class _NewScreenState extends State<NewScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(),
+      home: TelaInicial(),
     );
   }
 }

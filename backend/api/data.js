@@ -14,7 +14,11 @@ module.exports = app => {
                             .insert(resposta.data[i])
                             .then(() => res.send())
                             .catch(err => res.send(err))
+                            
                     }
+
+                 res.json([resposta.data])    
+
             })
 
     }  
@@ -80,7 +84,7 @@ module.exports = app => {
                         if (err) return res.send(err);
 
                         results.map((dados, index) => {
-                            dadosObtidosRequisicao = dados
+                            dadosObtidosRequisicao.push(dados)
                         })
                         res.json([somatorioMortes, somatorioCasosConfirmados, 
                             somatorioRecuperados, dadosObtidosRequisicao])
@@ -90,9 +94,6 @@ module.exports = app => {
                 ) 
 
         })
-
-        
-       
 
     }
 
