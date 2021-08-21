@@ -5,10 +5,14 @@ module.exports = app => {
     var connections = mysql.createConnection(connection)
     const mostraTodos = async (req, res, next) => {
         var dadosObtidosRequisicao = []
+        var data = new Date();
+        var dataDia = data.getDate();
+        var dataMes = data.getMonth();
+        var dataAno = data.getFullYear();
         await connections.query('TRUNCATE TABLE covidbrasil', function (error, results) {
             if(error) return res.send(error)
         })
-        await axios.get('https://api.covid19api.com/country/brazil?from=2021-02-01T00:00:00Z&to=2021-08-19T00:00:00Z')
+        await axios.get(`https://api.covid19api.com/country/brazil?from=2021-02-01T00:00:00Z&to=${dataAno}-${dataMes+1}-${dataDia}T00:00:00Z`)
             .then(resposta => {                
                         
                             app.db('covidbrasil')
@@ -31,8 +35,8 @@ module.exports = app => {
 
     const mediaDeMortes = async (req, res) => {
                 var valorData = {...req.body}
-                var data = `${valorData.data1}T00:00:00Z` //esta é a data principal, a outra é apenas um calculo de 14 dias antes para fazer a media movel
-                var data2 = `${valorData.data2}T00:00:00Z`
+                var data = `${valorData.dataParaCalculo}T00:00:00Z` //esta é a data principal, a outra é apenas um calculo de 14 dias antes para fazer a media movel
+                var data2 = `${valorData.dataHoje}T00:00:00Z`
                 connections.query('TRUNCATE TABLE dados_medias_solicitadas', function (error, results) {
                     if(error) return res.send(error)
                 })
@@ -62,7 +66,7 @@ module.exports = app => {
                                 if (error) return res.send(error);
                             }
                         ) 
-                        res.json(media)
+                        res.json([{media, totalMortes, totalRecuperadas, totalCasosConfirmados}])
                     }
                 );
 
