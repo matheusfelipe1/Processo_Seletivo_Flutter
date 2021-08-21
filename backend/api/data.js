@@ -40,17 +40,18 @@ module.exports = app => {
                 connections.query('TRUNCATE TABLE dados_medias_solicitadas', function (error, results) {
                     if(error) return res.send(error)
                 })
-                connections.query( 'SELECT * FROM covidbrasil WHERE Date >= "'+ data +'" AND Date <= "'+ data2 +'" ORDER BY Date', 
+                connections.query( 'SELECT * FROM covidbrasil WHERE Date >= "'+ data +'" AND Date <= "'+ data2 +'" ORDER BY Date DESC', 
                     function (error, results)  {
                         if (error) return res.send(error)
                         let totalMortes = 0
                         let totalRecuperadas = 0
                         let totalCasosConfirmados = 0
-                       
+                        let todosOsDados = []
                         results.map((dados, index) => {
                             totalMortes +=  dados['Deaths']
                             totalRecuperadas += dados['Recovered']
                             totalCasosConfirmados += dados['Confirmed']
+                            todosOsDados.push(dados)
                              app.db('dados_medias_solicitadas')
                                     .insert(dados)
                                     .then(() => res.json())
@@ -58,15 +59,17 @@ module.exports = app => {
                                     
                         })
                        
-                        let media = totalMortes / 14                        
+                        let mediaMortes = totalMortes / 14   
+                        let mediaRecuperados = totalRecuperadas / 14                  
+                        let mediaConfirmados = totalCasosConfirmados / 14                   
                         connections.query(
                             "INSERT INTO media_movel_datas_respectivas (moving_average, Date, totalDeath, totalRecovered, totalCasesConfirmed) VALUES (?, ?, ?, ?, ?)",
-                            [media, data, totalMortes, totalRecuperadas, totalCasosConfirmados],
+                            [mediaMortes, data, totalMortes, mediaRecuperados, mediaConfirmados],
                             function(err, results, fields){
                                 if (error) return res.send(error);
                             }
                         ) 
-                        res.json([{media, totalMortes, totalRecuperadas, totalCasosConfirmados}])
+                        res.json([{mediaMortes, mediaConfirmados, mediaRecuperados, todosOsDados}])
                     }
                 );
 
