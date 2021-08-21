@@ -18,6 +18,7 @@ class _TelaInicialState extends State<TelaInicial> {
   List lista = [];
   List dadosListaApi = [];
   bool pesquisando = false;
+  final TextEditingController _pesquisa = new TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -34,14 +35,47 @@ class _TelaInicialState extends State<TelaInicial> {
     lista.addAll(dadosListaApi);
   }
 
+  Widget filtrando() {
+    return Container(
+      height: 35.0,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: Center(
+        child: TextField(
+          controller: _pesquisa,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: "Buscar",
+            border: InputBorder.none,
+            prefixIcon: Icon(Icons.search),
+          ),
+          style: const TextStyle(color: Colors.black, fontSize: 16.0),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.purple[900],
-          title: Text('Covid-19 no Brasil'),
-          leading: Icon(Icons.coronavirus),
-          actions: [pesquisando ? Icon(Icons.cancel) : Icon(Icons.search)],
+          title: pesquisando ? filtrando() : Text('Covid-19 no Brasil'),
+          leading: pesquisando ? null : Icon(Icons.coronavirus),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                  child: pesquisando ? Icon(Icons.cancel) : Icon(Icons.search),
+                  onTap: () => {
+                        setState(() {
+                          pesquisando = !pesquisando;
+                        })
+                      }),
+            )
+          ],
         ),
         body: dadosListaApi == null || dadosListaApi.length == 0
             ? Center(child: CircularProgressIndicator())
