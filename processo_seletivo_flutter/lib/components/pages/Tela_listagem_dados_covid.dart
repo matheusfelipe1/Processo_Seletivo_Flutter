@@ -99,32 +99,38 @@ class _TelaInicialState extends State<TelaDeListagemDosDadosCovid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.purple[900],
-          title: pesquisando ? filtrando() : Text('Covid-19 no Brasil'),
-          leading: pesquisando ? null : Icon(Icons.coronavirus),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                  child: pesquisando ? Icon(Icons.cancel) : Icon(Icons.search),
-                  onTap: () => {
-                        setState(() {
-                          pesquisando = !pesquisando;
-                          pesquisando
-                              ? iniciarPesquisa()
-                              : {pararPesquisa(), Navigator.of(context).pop()};
-                        }),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.purple[900],
+        title: pesquisando ? filtrando() : Text('Covid-19 no Brasil'),
+        leading: pesquisando ? null : Icon(Icons.coronavirus),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: GestureDetector(
+                child: pesquisando ? Icon(Icons.cancel) : Icon(Icons.search),
+                onTap: () => {
+                      setState(() {
+                        pesquisando = !pesquisando;
+                        pesquisando
+                            ? iniciarPesquisa()
+                            : {pararPesquisa(), Navigator.of(context).pop()};
                       }),
+                    }),
+          )
+        ],
+      ),
+      body: dadosListaApi != null || dadosListaApi.length > 0
+          ? Lista(
+              renderizaDados: dadosListaApi,
             )
-          ],
-        ),
-        body: dadosListaApi == null || dadosListaApi.length == 0
-            ? Center(child: CircularProgressIndicator())
-            : Lista(
-                renderizaDados: dadosListaApi,
-              ));
+          : lista == null
+              ? Center(child: CircularProgressIndicator())
+              : Center(
+                  child: Text(
+                  "Nenhum dado encontrado",
+                )),
+    );
   }
 }
 
@@ -138,6 +144,11 @@ class Lista extends StatefulWidget {
 class _ListaState extends State<Lista> {
   @override
   Widget build(BuildContext context) {
+    if (widget.renderizaDados == null || widget.renderizaDados.length == 0) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return ListView.builder(
         itemCount: widget.renderizaDados.length == null
             ? 0

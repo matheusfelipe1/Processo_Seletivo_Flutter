@@ -21,7 +21,8 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
     return Scaffold(
       body: _telas[paginaAtualIndice],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
+        fixedColor: Colors.purple[900],
         elevation: 50,
         currentIndex: paginaAtualIndice,
         onTap: (indice) {
