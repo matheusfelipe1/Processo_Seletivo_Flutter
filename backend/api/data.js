@@ -4,23 +4,29 @@ const mysql = require('mysql');
 module.exports = app => {
     var connections = mysql.createConnection(connection)
     const mostraTodos = async (req, res, next) => {
+        var dadosObtidosRequisicao = []
         await connections.query('TRUNCATE TABLE covidbrasil', function (error, results) {
             if(error) return res.send(error)
         })
         await axios.get('https://api.covid19api.com/country/brazil?from=2021-02-01T00:00:00Z&to=2021-08-19T00:00:00Z')
             .then(resposta => {                
-                        for ( var i in resposta.data) {
+                        
                             app.db('covidbrasil')
-                            .insert(resposta.data[i])
-                            .then(() => res.send())
+                            .insert(resposta.data)
+                            .then(() => {
+                                connections.query('SELECT * FROM covidbrasil ORDER BY Date DESC', function (error, results){
+                                    if(error) return res.send(error)
+
+                                    res.json(results)
+                                })
+                            })
                             .catch(err => res.send(err))
                             
-                    }
-
-                 res.json(resposta.data)    
-
+                        
+                    
             })
-
+                 
+                     
     }  
 
     const mediaDeMortes = async (req, res) => {
