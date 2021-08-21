@@ -17,7 +17,7 @@ module.exports = app => {
                             
                     }
 
-                 res.json([resposta.data])    
+                 res.json(resposta.data)    
 
             })
 
