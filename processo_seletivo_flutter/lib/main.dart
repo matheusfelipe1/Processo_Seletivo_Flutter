@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:processo_seletivo_flutter/components/pages/TelaInicial.dart';
+import 'package:processo_seletivo_flutter/components/bottom_navigation/Bottom_navigations_route.dart';
+import 'package:processo_seletivo_flutter/components/pages/Tela_listagem_dados_covid.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: TelaInicial(),
+      home: BottomNavigationRoute(),
     );
   }
 }

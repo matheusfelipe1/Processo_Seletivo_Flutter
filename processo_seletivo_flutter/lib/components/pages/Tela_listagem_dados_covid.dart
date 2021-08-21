@@ -7,14 +7,14 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-class TelaInicial extends StatefulWidget {
-  const TelaInicial({Key? key}) : super(key: key);
+class TelaDeListagemDosDadosCovid extends StatefulWidget {
+  const TelaDeListagemDosDadosCovid({Key? key}) : super(key: key);
 
   @override
   _TelaInicialState createState() => _TelaInicialState();
 }
 
-class _TelaInicialState extends State<TelaInicial> {
+class _TelaInicialState extends State<TelaDeListagemDosDadosCovid> {
   List lista = [];
   List dadosListaApi = [];
   bool pesquisando = false;
