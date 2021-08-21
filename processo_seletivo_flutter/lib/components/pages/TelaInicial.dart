@@ -44,23 +44,63 @@ class _TelaInicialState extends State<TelaInicial> {
       ),
       child: Center(
         child: TextField(
-          controller: _pesquisa,
-          autofocus: true,
-          decoration: const InputDecoration(
-            hintText: "Buscar",
-            border: InputBorder.none,
-            prefixIcon: Icon(Icons.search),
-          ),
-          style: const TextStyle(color: Colors.black, fontSize: 16.0),
-        ),
+            controller: _pesquisa,
+            autofocus: true,
+            decoration: const InputDecoration(
+              hintText: "Buscar",
+              border: InputBorder.none,
+              prefixIcon: Icon(Icons.search),
+            ),
+            style: const TextStyle(color: Colors.black, fontSize: 16.0),
+            onChanged: (e) => iniciandoPesquisa(e)),
       ),
     );
+  }
+
+  void iniciarPesquisa() {
+    ModalRoute.of(context)!
+        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: pararPesquisa));
+    setState(() {
+      pesquisando = true;
+    });
+  }
+
+  void pararPesquisa() {
+    if (_pesquisa.toString().isNotEmpty ||
+        _pesquisa.toString().length > 0 ||
+        _pesquisa.toString() != null) {
+      setState(() {
+        _pesquisa.clear();
+        pesquisando = false;
+        dadosListaApi.clear();
+        dadosListaApi.addAll(lista);
+      });
+    }
+  }
+
+  void iniciandoPesquisa(String query) {
+    dadosListaApi.clear();
+
+    if (query.length > 0) {
+      Set.from(lista).forEach((element) {
+        setState(() {
+          if (element.toString().contains(query)) {
+            dadosListaApi.add(element);
+          }
+        });
+      });
+    }
+    if (query.isEmpty || query.length == 0 || query == null) {
+      dadosListaApi.addAll(lista);
+    }
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.purple[900],
           title: pesquisando ? filtrando() : Text('Covid-19 no Brasil'),
           leading: pesquisando ? null : Icon(Icons.coronavirus),
@@ -72,7 +112,10 @@ class _TelaInicialState extends State<TelaInicial> {
                   onTap: () => {
                         setState(() {
                           pesquisando = !pesquisando;
-                        })
+                          pesquisando
+                              ? iniciarPesquisa()
+                              : {pararPesquisa(), Navigator.of(context).pop()};
+                        }),
                       }),
             )
           ],
