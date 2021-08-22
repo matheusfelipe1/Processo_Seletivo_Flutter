@@ -12,6 +12,8 @@ obterGrafico(http.Client cliente,
       Uri.parse('http://192.168.100.13:3000/obtermedia'),
       headers: {'Content-Type': 'application/json'},
       body: _body);
-
-  return json.decode(utf8.decode(resposta.body.toString().runes.toList()));
+  if (resposta.statusCode == 200) {
+    return json.decode(utf8.decode(resposta.body.toString().runes.toList()));
+  }
+  return null;
 }

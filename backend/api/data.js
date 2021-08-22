@@ -8,11 +8,12 @@ module.exports = app => {
         var data = new Date();
         var dataDia = data.getDate();
         var dataMes = data.getMonth();
+        var dataParaSubtrair = data.getMonth() - 5;
         var dataAno = data.getFullYear();
         await connections.query('TRUNCATE TABLE covidbrasil', function (error, results) {
             if(error) return res.send(error)
         })
-        await axios.get(`https://api.covid19api.com/country/brazil?from=2021-02-01T00:00:00Z&to=${dataAno}-${dataMes+1}-${dataDia}T00:00:00Z`)
+        await axios.get(`https://api.covid19api.com/country/brazil?from=2021-${dataParaSubtrair}-01T00:00:00Z&to=${dataAno}-${dataMes+1}-${dataDia}T00:00:00Z`)
             .then(resposta => {                
                         
                             app.db('covidbrasil')

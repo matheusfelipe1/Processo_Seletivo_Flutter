@@ -130,17 +130,21 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
                 onTap: () => showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AlertDialog(
-                          content: ComponenteDialogGrafico(
-                        mediaMovelCasosConfirmados: dadosDasRequisicao[0]
-                            ['mediaConfirmados'],
-                        mediaMovelMortes: dadosDasRequisicao[0]['mediaMortes'],
-                        mediaMovelDeRecuperados: dadosDasRequisicao[0]
-                            ['mediaRecuperados'],
-                        totalConfirmados: dadosDosDias[0]['Confirmed'],
-                        totalMortes: dadosDosDias[0]['Deaths'],
-                        totalRecuperados: dadosDosDias[0]['Recovered'],
-                      ));
+                      return GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: AlertDialog(
+                            content: ComponenteDialogGrafico(
+                          mediaMovelCasosConfirmados: dadosDasRequisicao[0]
+                              ['mediaConfirmados'],
+                          mediaMovelMortes: dadosDasRequisicao[0]
+                              ['mediaMortes'],
+                          mediaMovelDeRecuperados: dadosDasRequisicao[0]
+                              ['mediaRecuperados'],
+                          totalConfirmados: dadosDosDias[0]['Confirmed'],
+                          totalMortes: dadosDosDias[0]['Deaths'],
+                          totalRecuperados: dadosDosDias[0]['Recovered'],
+                        )),
+                      );
                     }),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
