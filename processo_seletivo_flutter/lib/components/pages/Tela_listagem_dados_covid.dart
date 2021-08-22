@@ -81,9 +81,12 @@ class _TelaInicialState extends State<TelaDeListagemDosDadosCovid> {
     dadosListaApi.clear();
 
     if (query.length > 0) {
+      String busca = query.split('/').reversed.join("-");
       Set.from(lista).forEach((element) {
         setState(() {
-          if (element.toString().contains(query)) {
+          if (element.toString().contains(busca) ||
+              element.toString().contains(query)) {
+            // como a data na api ta padrao americano, usei essa funcao para reverter string de trás para frente
             dadosListaApi.add(element);
           }
         });
