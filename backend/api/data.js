@@ -38,6 +38,10 @@ module.exports = app => {
                 var armazenaNovasMortes = []
                 var armazenaNovasConfirmados = []
                 var todosDados = []
+                var totalMortes
+                var totalNovosCasos
+                var mediaMovelMortes 
+                var mediaMovelConfirmados 
                 connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+data2+'" AND Date <="'+data+'" ORDER BY Date DESC', function (error, results){
                     if(error) return res.send(error)
                     results.map((dados, index) => {
@@ -64,22 +68,23 @@ module.exports = app => {
                     */
                     armazenaNovasMortes.pop() 
                     armazenaNovasConfirmados.pop() 
-                    var totalMortes = armazenaNovasMortes.reduce((value, index) => value + index, 0)
-                    var totalNovosCasos = armazenaNovasConfirmados.reduce((value, index) => value + index, 0)
+                    totalMortes = armazenaNovasMortes.reduce((value, index) => value + index, 0)
+                    totalNovosCasos = armazenaNovasConfirmados.reduce((value, index) => value + index, 0)
                     
-                    var mediaMovelMortes = totalMortes / 14
-                    var mediaMovelConfirmados = totalNovosCasos / 14
-                   
-                    connections.query('INSERT INTO media_movel_datas_respectivas (moving_average, Date, totalDeath, totalCasesConfirmed) VALUES (?,?,?,?,?)', 
-                    [mediaMovelMortes, data, totalMortes,  totalNovosCasos],
-                    function (error, results){
+                    mediaMovelMortes = totalMortes / 14
+                    mediaMovelConfirmados = totalNovosCasos / 14
 
-                    })
-
+                    app.db('media_movel_datas_respectivas')
+                        .insert({'moving_average': mediaMovelMortes, 'Date': data, 'totalDeath': totalMortes, 'totalCasesConfirmed': totalNovosCasos })
+                        .then(() => res.send())
+                        .catch((erro) => res.send(erro))
+                
                     res.json({  mediaMovelMortes, mediaMovelConfirmados, totalMortes, totalNovosCasos})
-                    
                 })
                 
+
+
+   
 
     } 
 
@@ -90,16 +95,15 @@ module.exports = app => {
         let somatorioCasosConfirmados = 0
         let somatorioRecuperados = 0
         var dadosObtidosRequisicao = []
-        await connections.query('SELECT * FROM media_movel_datas_respectivas', 
-            function (error, results) {
-                if(error) return res.send(error)
-                results.map((dados, index) => {
-                    somatorioMortes = eval(`${dados['totalDeath']}+${somatorioMortes}`)
-                    somatorioRecuperados = eval(`${dados['totalRecovered']}+${somatorioRecuperados}`)
-                    somatorioCasosConfirmados = eval(`${dados['totalCasesConfirmed']}+${somatorioCasosConfirmados}`)
-                })
+        var somatorioMedia = []
+        await app.db('media_movel_datas_respectivas')
+                .select('moving_average')
+                .then(resp => console.log(resp))
+                .catch(err => console.log(err))
+
+                
               
-                connections.query(
+               await connections.query(
                     'SELECT * FROM covidbrasil WHERE Date = "'+ data +'"',
                     function(err, results, fields){
                         if (err) return res.send(err);
@@ -108,13 +112,12 @@ module.exports = app => {
                             dadosObtidosRequisicao.push(dados)
                         })
                         res.json(dadosObtidosRequisicao)
-                        console.log(dadosObtidosRequisicao); 
                        
                     }
                     
                 ) 
 
-        })
+        
 
     }
 

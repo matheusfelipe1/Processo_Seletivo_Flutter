@@ -2,10 +2,10 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('media_movel_datas_respectivas', table => {
       table.increments('id').primary()
-      table.string('moving_average').notNull()
+      table.integer('moving_average').notNull()
       table.string('Date').unique()
-      table.string('totalDeath').notNull()
-      table.string('totalCasesConfirmed')
+      table.integer('totalDeath').notNull()
+      table.integer('totalCasesConfirmed')
   })
 };
 

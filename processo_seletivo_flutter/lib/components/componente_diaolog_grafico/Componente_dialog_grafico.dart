@@ -53,7 +53,6 @@ class _ComponenteDialogGraficoState extends State<ComponenteDialogGrafico> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Dados Covid-19 bo Brasil hoje'),
           SizedBox(
             height: MediaQuery.of(context).size.height / 2,
             child: new charts.PieChart(
@@ -63,23 +62,7 @@ class _ComponenteDialogGraficoState extends State<ComponenteDialogGrafico> {
                     widget.totalMortes,
                     widget.totalConfirmados),
                 animate: true),
-          ),
-          Text(
-            "Total de mortos: ${widget.totalMortes}",
-            strutStyle: StrutStyle(fontSize: 50),
-          ),
-          Text(
-            "Total de confirmados: ${widget.totalConfirmados}",
-            strutStyle: StrutStyle(fontSize: 50),
-          ),
-          Text(
-            "Media Movel de mortos: ${widget.mediaMovelMortes}",
-            strutStyle: StrutStyle(fontSize: 50),
-          ),
-          Text(
-            "Media Movel de casos: ${widget.mediaMovelCasosConfirmados}",
-            strutStyle: StrutStyle(fontSize: 50),
-          ),
+          )
         ],
       ),
     );

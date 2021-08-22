@@ -108,45 +108,107 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: GestureDetector(
-          onTap: () => showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: AlertDialog(
-                      content: ComponenteDialogGrafico(
-                        mediaMovelCasosConfirmados: confirmadoMedia,
-                        mediaMovelMortes: morteMedia,
-                        totalConfirmados: confirmados,
-                        totalMortes: morte,
-                      ),
-                    ));
-              }),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Center(
-                child: Text('Relatório de hoje',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 2,
-                child: new charts.BarChart(
-                  _createSampleData(
-                    confirmados,
-                    morte,
-                    confirmadoMedia,
-                    morteMedia,
+    return morte == null ||
+            confirmados == null ||
+            morteMedia == null ||
+            confirmadoMedia == null
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: GestureDetector(
+              onTap: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    NumberFormat formatter = NumberFormat("00.00");
+
+                    return GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: AlertDialog(
+                            title: Text('Dados Covid-19 bo Brasil hoje'),
+                            content: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("Total de mortos: "),
+                                    Text(
+                                      "$morte",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Total de confirmados: ",
+                                    ),
+                                    Text(
+                                      "$confirmados",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Media Movel de mortos: ",
+                                    ),
+                                    Text(
+                                      "${formatter.format(morteMedia)}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Media Movel de casos: ",
+                                    ),
+                                    Text(
+                                      "${formatter.format(confirmadoMedia)}",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              ComponenteDialogGrafico(
+                                mediaMovelCasosConfirmados: confirmadoMedia,
+                                mediaMovelMortes: morteMedia,
+                                totalConfirmados: confirmados,
+                                totalMortes: morte,
+                              ),
+                            ]));
+                  }),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Center(
+                    child: Text('Relatório de hoje',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
-                  animate: animate,
-                ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: new charts.BarChart(
+                      _createSampleData(
+                        confirmados,
+                        morte,
+                        confirmadoMedia,
+                        morteMedia,
+                      ),
+                      animate: animate,
+                    ),
+                  ),
+                  ComponentLegenda()
+                ],
               ),
-              ComponentLegenda()
-            ],
-          ),
-        ));
+            ));
   }
 }
