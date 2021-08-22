@@ -22,7 +22,7 @@ class _TelaInicialState extends State<TelaDeListagemDosDadosCovid> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    obterlista(http.Client()).then((value) => parseDados(value));
+    obterlista(http.Client()).then((value) => parseDados(value[0]));
   }
 
   void parseDados(List novalista) {

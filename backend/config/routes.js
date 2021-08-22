@@ -7,4 +7,7 @@ module.exports = app => {
     
     app.route('/obterdadosmedia')
         .post(app.api.data.buscarDadosDasMedias)
+
+    app.route('/dadosmes')
+    .post(app.api.data.dadosDoMes)
 }

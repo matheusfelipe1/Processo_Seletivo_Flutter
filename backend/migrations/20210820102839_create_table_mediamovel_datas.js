@@ -5,7 +5,6 @@ exports.up = function(knex, Promise) {
       table.string('moving_average').notNull()
       table.string('Date').unique()
       table.string('totalDeath').notNull()
-      table.string('totalRecovered')
       table.string('totalCasesConfirmed')
   })
 };

@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 obterGrafico(http.Client cliente,
     {final String dataParaCalculoMedia, final String dataHoje}) async {
-  Map params = {'dataHoje': dataHoje, "dataParaCalculo": dataParaCalculoMedia};
+  Map params = {'data': dataHoje, "data2": dataParaCalculoMedia};
   var _body = json.encode(params);
   var resposta = await cliente.post(
       Uri.parse('http://192.168.100.13:3000/obtermedia'),
