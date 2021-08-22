@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class Lista extends StatefulWidget {
   final List renderizaDados;
-  Lista({required this.renderizaDados});
+  Lista({this.renderizaDados});
   @override
   _ListaState createState() => _ListaState();
 }
@@ -23,25 +23,34 @@ class _ListaState extends State<Lista> {
         itemBuilder: (BuildContext context, int indice) {
           DateTime data =
               DateTime.parse(widget.renderizaDados[indice]['Date'].toString());
-          return Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Card(
-                child: ListTile(
-                    title: Text(
-                        widget.renderizaDados[indice]['Country'].toString()),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            "Mortes: ${widget.renderizaDados[indice]['Deaths'].toString()}"),
-                        Text(
-                            "Confirmados: ${widget.renderizaDados[indice]['Confirmed'].toString()}"),
-                        Text(
-                            "Recuperados: ${widget.renderizaDados[indice]['Recovered'].toString()}"),
-                      ],
-                    ),
-                    trailing: Text(DateFormat("dd/MM/yyyy").format(data))),
-              ));
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 6, top: 6),
+                  child: ListTile(
+                      title: Text(
+                          widget.renderizaDados[indice]['Country'].toString()),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              "Mortes: ${widget.renderizaDados[indice]['Deaths'].toString()}"),
+                          Text(
+                              "Confirmados: ${widget.renderizaDados[indice]['Confirmed'].toString()}"),
+                          Text(
+                              "Recuperados: ${widget.renderizaDados[indice]['Recovered'].toString()}"),
+                        ],
+                      ),
+                      trailing: Text(DateFormat("dd/MM/yyyy").format(data))),
+                ),
+              ),
+              Divider(
+                color: Colors.black26,
+              )
+            ],
+          );
         });
   }
 }

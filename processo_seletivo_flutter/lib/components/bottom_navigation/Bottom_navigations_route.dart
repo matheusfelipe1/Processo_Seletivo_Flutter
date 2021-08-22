@@ -3,8 +3,6 @@ import 'package:processo_seletivo_flutter/components/pages/Tela_graficos_indices
 import 'package:processo_seletivo_flutter/components/pages/Tela_listagem_dados_covid.dart';
 
 class BottomNavigationRoute extends StatefulWidget {
-  const BottomNavigationRoute({Key? key}) : super(key: key);
-
   @override
   _BottomNavigationRouteState createState() => _BottomNavigationRouteState();
 }

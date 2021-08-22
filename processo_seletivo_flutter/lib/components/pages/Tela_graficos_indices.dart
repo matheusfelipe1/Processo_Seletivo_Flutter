@@ -3,8 +3,6 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:processo_seletivo_flutter/components/graficos/Graficos.dart';
 
 class TelaGraficosIndices extends StatefulWidget {
-  const TelaGraficosIndices({Key? key}) : super(key: key);
-
   @override
   _TelaGraficosIndicesState createState() => _TelaGraficosIndicesState();
 }

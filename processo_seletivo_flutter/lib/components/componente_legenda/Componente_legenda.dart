@@ -59,9 +59,9 @@ class ComponentLegenda extends StatelessWidget {
         RenderizaLegendas('Confirmados', 'Media Móvel Confirmados', Colors.blue,
             Colors.yellow),
         RenderizaLegendas(
-            'Mortes', 'Media Móvel Mortes ', Colors.red, Colors.yellow),
-        RenderizaLegendas('Recuperados', 'Media Móvel Confirmado', Colors.green,
-            Colors.yellow),
+            'Mortes', 'Media Móvel Mortes ', Colors.red, Colors.black),
+        RenderizaLegendas('Recuperados', 'Media Móvel Recuperados',
+            Colors.green, Colors.deepOrange),
       ],
     ));
   }

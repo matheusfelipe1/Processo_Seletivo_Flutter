@@ -9,8 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 class TelaDeListagemDosDadosCovid extends StatefulWidget {
-  const TelaDeListagemDosDadosCovid({Key? key}) : super(key: key);
-
   @override
   _TelaInicialState createState() => _TelaInicialState();
 }
@@ -59,7 +57,7 @@ class _TelaInicialState extends State<TelaDeListagemDosDadosCovid> {
   }
 
   void iniciarPesquisa() {
-    ModalRoute.of(context)!
+    ModalRoute.of(context)
         .addLocalHistoryEntry(LocalHistoryEntry(onRemove: pararPesquisa));
     setState(() {
       pesquisando = true;

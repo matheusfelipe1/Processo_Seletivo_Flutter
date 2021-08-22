@@ -2,6 +2,9 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:processo_seletivo_flutter/components/componente_diaolog_grafico/Componente_dialog_grafico.dart';
+import 'package:processo_seletivo_flutter/components/componente_legenda/Componente_legenda.dart';
+import 'package:processo_seletivo_flutter/components/model/model_grafico/Model_grafico.dart';
 import 'package:processo_seletivo_flutter/services/Services_graficos.dart';
 
 class Grafico extends StatefulWidget {
@@ -17,6 +20,8 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
 
   DateTime dataHoje = DateTime.now();
   DateTime dataParaCalcularMedia = DateTime.now().subtract(Duration(days: 14));
+
+  get dadosRequisicao => null;
 
   obterDadosRequisicao() {
     var dataHojeFormatada = DateFormat("yyyy-MM-dd").format(dataHoje);
@@ -37,70 +42,70 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
     });
   }
 
-  static List<charts.Series<DadosGraficos, String>> _createSampleData(
+  static List<charts.Series<ModelGraficos, String>> _createSampleData(
       List dados, List dadosRequisicao) {
     final dadosConfirmados = [
-      new DadosGraficos(dados[0]['Confirmed'], 'Confirmados'),
+      new ModelGraficos(dados[0]['Confirmed'], 'Confirmados'),
     ];
     final dadosMediaConfirmados = [
-      new DadosGraficos(dadosRequisicao[0]['mediaConfirmados'], 'Confirmados'),
+      new ModelGraficos(dadosRequisicao[0]['mediaConfirmados'], 'Confirmados'),
     ];
     final dadosDeObitos = [
-      new DadosGraficos(dados[0]['Deaths'], 'Mortes'),
+      new ModelGraficos(dados[0]['Deaths'], 'Mortes'),
     ];
     final dadosMediaMortes = [
-      new DadosGraficos(dadosRequisicao[0]['mediaMortes'], 'Mortes'),
+      new ModelGraficos(dadosRequisicao[0]['mediaMortes'], 'Mortes'),
     ];
 
     final dadosDeRecuperados = [
-      new DadosGraficos(dados[0]['Recovered'], 'Recuperados'),
+      new ModelGraficos(dados[0]['Recovered'], 'Recuperados'),
     ];
 
     final dadosMediaDeRecuperados = [
-      new DadosGraficos(dadosRequisicao[0]['mediaRecuperados'], 'Recuperados'),
+      new ModelGraficos(dadosRequisicao[0]['mediaRecuperados'], 'Recuperados'),
     ];
 
     return [
-      new charts.Series<DadosGraficos, String>(
+      new charts.Series<ModelGraficos, String>(
         id: 'casosConfirmados',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (DadosGraficos sales, _) => sales.texto,
-        measureFn: (DadosGraficos sales, _) => sales.numero,
+        domainFn: (ModelGraficos sales, _) => sales.texto,
+        measureFn: (ModelGraficos sales, _) => sales.numero,
         data: dadosConfirmados,
       ),
-      new charts.Series<DadosGraficos, String>(
+      new charts.Series<ModelGraficos, String>(
         id: 'mediaConfirmados',
         colorFn: (_, __) => charts.MaterialPalette.yellow.shadeDefault,
-        domainFn: (DadosGraficos sales, _) => sales.texto,
-        measureFn: (DadosGraficos sales, _) => sales.numero,
+        domainFn: (ModelGraficos sales, _) => sales.texto,
+        measureFn: (ModelGraficos sales, _) => sales.numero,
         data: dadosMediaConfirmados,
       ),
-      new charts.Series<DadosGraficos, String>(
+      new charts.Series<ModelGraficos, String>(
         id: 'casosDeObitos',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        domainFn: (DadosGraficos sales, _) => sales.texto,
-        measureFn: (DadosGraficos sales, _) => sales.numero,
+        domainFn: (ModelGraficos sales, _) => sales.texto,
+        measureFn: (ModelGraficos sales, _) => sales.numero,
         data: dadosDeObitos,
       ),
-      new charts.Series<DadosGraficos, String>(
+      new charts.Series<ModelGraficos, String>(
         id: 'mediaDeObitos',
-        colorFn: (_, __) => charts.MaterialPalette.yellow.shadeDefault,
-        domainFn: (DadosGraficos sales, _) => sales.texto,
-        measureFn: (DadosGraficos sales, _) => sales.numero,
+        colorFn: (_, __) => charts.MaterialPalette.black,
+        domainFn: (ModelGraficos sales, _) => sales.texto,
+        measureFn: (ModelGraficos sales, _) => sales.numero,
         data: dadosMediaMortes,
       ),
-      new charts.Series<DadosGraficos, String>(
+      new charts.Series<ModelGraficos, String>(
         id: 'casosDeRecuperado',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (DadosGraficos sales, _) => sales.texto,
-        measureFn: (DadosGraficos sales, _) => sales.numero,
+        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+        domainFn: (ModelGraficos sales, _) => sales.texto,
+        measureFn: (ModelGraficos sales, _) => sales.numero,
         data: dadosDeRecuperados,
       ),
-      new charts.Series<DadosGraficos, String>(
+      new charts.Series<ModelGraficos, String>(
         id: 'mediaDeRecuperado',
-        colorFn: (_, __) => charts.MaterialPalette.yellow.shadeDefault,
-        domainFn: (DadosGraficos sales, _) => sales.texto,
-        measureFn: (DadosGraficos sales, _) => sales.numero,
+        colorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
+        domainFn: (ModelGraficos sales, _) => sales.texto,
+        measureFn: (ModelGraficos sales, _) => sales.numero,
         data: dadosMediaDeRecuperados,
       ),
     ];
@@ -121,16 +126,35 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : new charts.BarChart(
-                _createSampleData(dadosDosDias, dadosDasRequisicao),
-                animate: animate,
+            : GestureDetector(
+                onTap: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                          content: ComponenteDialogGrafico(
+                        mediaMovelCasosConfirmados: dadosDasRequisicao[0]
+                            ['mediaConfirmados'],
+                        mediaMovelMortes: dadosDasRequisicao[0]['mediaMortes'],
+                        mediaMovelDeRecuperados: dadosDasRequisicao[0]
+                            ['mediaRecuperados'],
+                        totalConfirmados: dadosDosDias[0]['Confirmed'],
+                        totalMortes: dadosDosDias[0]['Deaths'],
+                        totalRecuperados: dadosDosDias[0]['Recovered'],
+                      ));
+                    }),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: new charts.BarChart(
+                        _createSampleData(dadosDosDias, dadosDasRequisicao),
+                        animate: animate,
+                      ),
+                    ),
+                    ComponentLegenda()
+                  ],
+                ),
               ));
   }
-}
-
-class DadosGraficos {
-  final numero;
-  final texto;
-
-  DadosGraficos(this.numero, this.texto);
 }

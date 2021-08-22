@@ -5,8 +5,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 obterGrafico(http.Client cliente,
-    {required final String dataParaCalculoMedia,
-    required final String dataHoje}) async {
+    {final String dataParaCalculoMedia, final String dataHoje}) async {
   Map params = {'dataHoje': dataHoje, "dataParaCalculo": dataParaCalculoMedia};
   var _body = json.encode(params);
   var resposta = await cliente.post(
