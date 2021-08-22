@@ -85,7 +85,7 @@ module.exports = app => {
 
     const buscarDadosDasMedias = async (req, res) => {
         var valorData = {...req.body}
-        var data = `${valorData.data1}T00:00:00Z`
+        var data = `${valorData.data}T00:00:00Z`
         let somatorioMortes = 0
         let somatorioCasosConfirmados = 0
         let somatorioRecuperados = 0

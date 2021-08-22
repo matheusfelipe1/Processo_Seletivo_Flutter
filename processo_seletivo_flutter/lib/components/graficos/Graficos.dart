@@ -116,7 +116,14 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
               builder: (BuildContext context) {
                 return GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
-                    child: AlertDialog());
+                    child: AlertDialog(
+                      content: ComponenteDialogGrafico(
+                        mediaMovelCasosConfirmados: confirmadoMedia,
+                        mediaMovelMortes: morteMedia,
+                        totalConfirmados: confirmados,
+                        totalMortes: morte,
+                      ),
+                    ));
               }),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

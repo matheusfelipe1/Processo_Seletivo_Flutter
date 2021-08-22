@@ -9,5 +9,5 @@ module.exports = app => {
         .post(app.api.data.buscarDadosDasMedias)
 
     app.route('/dadosmes')
-    .post(app.api.data.dadosDoMes)
+        .post(app.api.data.dadosDoMes)
 }
