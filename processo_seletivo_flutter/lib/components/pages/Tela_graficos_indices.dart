@@ -13,7 +13,7 @@ class _TelaGraficosIndicesState extends State<TelaGraficosIndices> {
     return Scaffold(
         appBar: AppBar(
             leading: Icon(Icons.coronavirus),
-            title: Text('Covid-19 no Brasil'),
+            title: Text('Processo Seletivo Mobilus'),
             backgroundColor: Colors.purple[900]),
         body: Grafico());
   }

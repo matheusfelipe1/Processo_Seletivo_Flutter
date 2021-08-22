@@ -104,7 +104,7 @@ class _TelaInicialState extends State<TelaDeListagemDosDadosCovid> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.purple[900],
-        title: pesquisando ? filtrando() : Text('Covid-19 no Brasil'),
+        title: pesquisando ? filtrando() : Text('Processo Seletivo Mobilus'),
         leading: pesquisando ? null : Icon(Icons.coronavirus),
         actions: [
           Padding(

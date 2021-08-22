@@ -7,6 +7,7 @@ module.exports = app => {
         var dataHoje = new Date().toLocaleDateString().split("/").reverse().join('-');
         var dataParaSubtrair = new Date();
         var todos = [];
+        if(dataHoje != null || dataHoje.length != 0) {
         await connections.query('TRUNCATE TABLE covidbrasil', function (error, results) {
            if(error) return res.send(error)
         })
@@ -27,6 +28,10 @@ module.exports = app => {
                             })
                         }).catch(err => res.send(err))
             })
+
+        }else {
+            return res.send('Data não pode ser nula!')
+        }
     }  
 
     const mediaDeMortes = async (req, res) => {
@@ -42,16 +47,16 @@ module.exports = app => {
                 var totalNovosCasos
                 var mediaMovelMortes 
                 var mediaMovelConfirmados 
-                connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+data2+'" AND Date <="'+data+'" ORDER BY Date DESC', function (error, results){
+                if(valorData.toString() != null || valorData.toString().length != 0) {
+                    await connections.query('TRUNCATE TABLE dados_medias_solicitadas', function (error, results) {
+                        if (error) return res.send(error)
+                    })
+                await connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+data2+'" AND Date <="'+data+'" ORDER BY Date DESC', 
+                function (error, results){
                     if(error) return res.send(error)
                     results.map((dados, index) => {
                         novosCasos.push(dados['Confirmed'])
                         novosMortes.push(dados['Deaths'])
-
-                        app.db('dados_medias_solicitadas')
-                            .insert(dados)
-                            .then(() => res.send())
-                            .catch((err) => res.send(err))
                     })
 
                     todosDados.push(results)
@@ -74,13 +79,27 @@ module.exports = app => {
                     mediaMovelMortes = totalMortes / 14
                     mediaMovelConfirmados = totalNovosCasos / 14
 
+                    results.forEach((dados, index) => {
+                        app.db('dados_medias_solicitadas')
+                            .insert({'Country': dados['Country'], 'newCases': armazenaNovasConfirmados[index],
+                            'newDeaths': armazenaNovasMortes[index], 'Confirmed': dados['Confirmed'], 'Deaths': dados['Deaths'],
+                            'Date': dados['Date']})
+                            .then(() => res.send())
+                            .catch((err) => res.send(err))
+                    })
+
                     app.db('media_movel_datas_respectivas')
                         .insert({'moving_average': mediaMovelMortes, 'Date': data, 'totalDeath': totalMortes, 'totalCasesConfirmed': totalNovosCasos })
                         .then(() => res.send())
                         .catch((erro) => res.send(erro))
                 
-                    res.json({  mediaMovelMortes, mediaMovelConfirmados, totalMortes, totalNovosCasos})
+                    res.json({mediaMovelMortes, mediaMovelConfirmados, totalMortes, totalNovosCasos})
                 })
+
+
+            }else {
+                return res.send('Data não pode ser nula!')
+            }
                 
 
 
@@ -94,30 +113,28 @@ module.exports = app => {
         let somatorioMortes = 0
         let somatorioCasosConfirmados = 0
         let somatorioRecuperados = 0
-        var dadosObtidosRequisicao = []
-        var somatorioMedia = []
-        await app.db('media_movel_datas_respectivas')
+        var dadosObjetoSelecionado = []
+        var todosOsDados = []
+        var mediaMovelMortes = []
+        if(valorData.toString() != null || valorData.toString().length != 0) {
+            await app.db('media_movel_datas_respectivas')
                 .select('moving_average')
-                .then(resp => console.log(resp))
+                .then(resp => mediaMovelMortes.push(resp))
                 .catch(err => console.log(err))
+            await app.db('dados_medias_solicitadas')
+                .select('Country', 'Date', 'newDeaths', 'Deaths', 'newCases', 'Confirmed')
+                .then(resp => todosOsDados.push(resp))
+                .catch(err => res.send(err))
+            await app.db('covidbrasil')
+                .select('Country', 'Date', 'Deaths', 'Confirmed', 'Recovered')
+                .where({'Date': data})
+                .then((resp) => dadosObjetoSelecionado.push(resp))
+                .catch(err => res.send(err))
 
-                
-              
-               await connections.query(
-                    'SELECT * FROM covidbrasil WHERE Date = "'+ data +'"',
-                    function(err, results, fields){
-                        if (err) return res.send(err);
-
-                        results.map((dados, index) => {
-                            dadosObtidosRequisicao.push(dados)
-                        })
-                        res.json(dadosObtidosRequisicao)
-                       
-                    }
-                    
-                ) 
-
-        
+            res.json({mediaMovelMortes,dadosObjetoSelecionado, todosOsDados})
+        }else {
+            return res.send('Data não pode ser nula!')
+        }   
 
     }
 
@@ -133,6 +150,7 @@ module.exports = app => {
         var armazenaNovasConfirmados = []
         var todosDados = []
         var dataApi = []
+        if(data.toString() != null || data.toString().length != 0) {
         connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+data2+'" AND Date <="'+data+'" ORDER BY Date DESC', function (error, results){
             if(error) return res.send(error)
             results.map((dados, index) => {
@@ -164,6 +182,10 @@ module.exports = app => {
 
         })
         }})
+
+    }else {
+        return res.send('Data não pode ser nula!')
+    }
     }
 
     return {mostraTodos, mediaDeMortes, buscarDadosDasMedias, dadosDoMes}
