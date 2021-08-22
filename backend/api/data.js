@@ -4,7 +4,6 @@ const mysql = require('mysql');
 module.exports = app => {
     var connections = mysql.createConnection(connection)
     const mostraTodos = async (req, res, next) => {
-        var dadosObtidosRequisicao = []
         var data = new Date();
         var dataDia = data.getDate();
         var dataMes = data.getMonth();

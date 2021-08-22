@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:processo_seletivo_flutter/components/pages/Tela_detalhamento_dados_listados.dart';
 
 class Lista extends StatefulWidget {
   final List renderizaDados;
@@ -29,21 +30,27 @@ class _ListaState extends State<Lista> {
                 padding: const EdgeInsets.all(4.0),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 6, top: 6),
-                  child: ListTile(
-                      title: Text(
-                          widget.renderizaDados[indice]['Country'].toString()),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              "Mortes: ${widget.renderizaDados[indice]['Deaths'].toString()}"),
-                          Text(
-                              "Confirmados: ${widget.renderizaDados[indice]['Confirmed'].toString()}"),
-                          Text(
-                              "Recuperados: ${widget.renderizaDados[indice]['Recovered'].toString()}"),
-                        ],
-                      ),
-                      trailing: Text(DateFormat("dd/MM/yyyy").format(data))),
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (ctx) => TelaDetalhamentoDadosListados(
+                              data: widget.renderizaDados[indice]['Date'],
+                            ))),
+                    child: ListTile(
+                        title: Text(widget.renderizaDados[indice]['Country']
+                            .toString()),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "Mortes: ${widget.renderizaDados[indice]['Deaths'].toString()}"),
+                            Text(
+                                "Confirmados: ${widget.renderizaDados[indice]['Confirmed'].toString()}"),
+                            Text(
+                                "Recuperados: ${widget.renderizaDados[indice]['Recovered'].toString()}"),
+                          ],
+                        ),
+                        trailing: Text(DateFormat("dd/MM/yyyy").format(data))),
+                  ),
                 ),
               ),
               Divider(

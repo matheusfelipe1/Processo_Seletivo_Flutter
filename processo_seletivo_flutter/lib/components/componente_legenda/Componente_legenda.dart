@@ -54,15 +54,21 @@ class ComponentLegenda extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        child: Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-      children: [
-        RenderizaLegendas('Confirmados', 'Media Móvel Confirmados', Colors.blue,
-            Colors.yellow),
-        RenderizaLegendas(
-            'Mortes', 'Media Móvel Mortes ', Colors.red, Colors.black),
-        RenderizaLegendas('Recuperados', 'Media Móvel Recuperados',
-            Colors.green, Colors.deepOrange),
-      ],
+          children: [
+            RenderizaLegendas('Confirmados', 'Media Móvel Confirmados',
+                Colors.blue, Colors.yellow),
+            RenderizaLegendas(
+                'Mortes', 'Media Móvel Mortes ', Colors.red, Colors.black),
+            RenderizaLegendas('Recuperados', 'Media Móvel Recuperados',
+                Colors.green, Colors.deepOrange),
+          ],
+        ),
+      ),
     ));
   }
 }
