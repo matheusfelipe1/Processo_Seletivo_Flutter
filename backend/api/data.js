@@ -110,9 +110,6 @@ module.exports = app => {
     const buscarDadosDasMedias = async (req, res) => {
         var valorData = {...req.body}
         var data = `${valorData.data}T00:00:00Z`
-        let somatorioMortes = 0
-        let somatorioCasosConfirmados = 0
-        let somatorioRecuperados = 0
         var dadosObjetoSelecionado = []
         var todosOsDados = []
         var mediaMovelMortes = []
@@ -131,7 +128,7 @@ module.exports = app => {
                 .then((resp) => dadosObjetoSelecionado.push(resp))
                 .catch(err => res.send(err))
 
-            res.json({mediaMovelMortes,dadosObjetoSelecionado, todosOsDados})
+            res.json([mediaMovelMortes[0][0],dadosObjetoSelecionado[0][0], todosOsDados[0]])
         }else {
             return res.send('Data não pode ser nula!')
         }   
