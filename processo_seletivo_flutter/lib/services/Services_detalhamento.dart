@@ -4,8 +4,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-Future<String> obterDetalhamento(http.Client cliente,
-    {final String dataParaEnvio}) async {
+obterDetalhamento(http.Client cliente, {final String dataParaEnvio}) async {
   Map params = {'data': dataParaEnvio};
   var _body = json.encode(params);
   var resposta = await cliente.post(
@@ -13,7 +12,7 @@ Future<String> obterDetalhamento(http.Client cliente,
       headers: {'Content-Type': 'application/json'},
       body: _body);
   if (resposta.statusCode == 200) {
-    return utf8.decode(resposta.body.runes.toList());
+    return utf8.decode(resposta.body.toString().runes.toList());
   }
   return null;
 }

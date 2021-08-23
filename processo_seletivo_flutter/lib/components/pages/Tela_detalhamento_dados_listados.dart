@@ -19,10 +19,12 @@ class TelaDetalhamentoDadosListados extends StatefulWidget {
 class _TelaDetalhamentoDadosListadosState
     extends State<TelaDetalhamentoDadosListados> {
   List dadosObjetoSelecionado;
-  List<int> todasMediasMoveis = [];
+  List todasMediasMoveis = [];
   List objetoDaListaSelecionado = [];
   List dadosParaCalcularMedia = [];
-
+  String totalAcumuladoMediaMovel;
+  double mediaAcumulada;
+  double mediaMovelObjetoSelecioado;
   var dataParaEnvio;
   var dataParaCalcularMedia;
 
@@ -40,7 +42,13 @@ class _TelaDetalhamentoDadosListadosState
     obterNovaMediaMovelPelaLista(http.Client(),
             dataParaEnvio: dataParaEnvio,
             dataParaCalculoMedia: dataParaCalcularMedia)
-        .then((value) => {print(value)});
+        .then((value) => {
+              setState(() {
+                mediaMovelObjetoSelecioado =
+                    value["mediaMovelMortes"].toDouble();
+                print(mediaMovelObjetoSelecioado);
+              })
+            });
   }
 
   @override
@@ -53,17 +61,15 @@ class _TelaDetalhamentoDadosListadosState
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
+    return FutureBuilder<dynamic>(
         future: obterDetalhamento(http.Client(), dataParaEnvio: dataParaEnvio),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            dadosObjetoSelecionado = json.decode(snapshot.data);
+            dadosObjetoSelecionado = json.decode(snapshot.data.toString());
             todasMediasMoveis.addAll(dadosObjetoSelecionado[0]);
             objetoDaListaSelecionado.addAll(dadosObjetoSelecionado[1]);
             dadosParaCalcularMedia.addAll(dadosObjetoSelecionado[2]);
-            var total = todasMediasMoveis.reduce(
-              (key, value) => (key + value),
-            );
+            mediaAcumulada = dadosObjetoSelecionado[3].toDouble();
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.purple[900],
@@ -72,7 +78,11 @@ class _TelaDetalhamentoDadosListadosState
               body: ListView(
                 children: [
                   ComponenteCabecalhoTelaDetalhamento(
-                      dados: objetoDaListaSelecionado, data: widget.data)
+                    dados: objetoDaListaSelecionado,
+                    data: widget.data,
+                    valorAcumulado: mediaAcumulada,
+                    mediaMovelObjetoSelecioado: mediaMovelObjetoSelecioado,
+                  )
                 ],
               ),
             );

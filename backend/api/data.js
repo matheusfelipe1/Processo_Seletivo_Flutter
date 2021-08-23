@@ -112,11 +112,17 @@ module.exports = app => {
         var dadosObjetoSelecionado = []
         var todosOsDados = []
         var mediaMovelMortes = []
+        var acumuladoMediaMovel;
         if(valorData.toString() != null || valorData.toString().length != 0) {
-            await app.db('media_movel_datas_respectivas')
-                .select('moving_average')
-                .then(resp => mediaMovelMortes.push(resp))
-                .catch(err => console.log(err))
+            
+            connections.query('SELECT moving_average FROM media_movel_datas_respectivas', function (error, results){
+                if(error) return res.send(error)
+                results.forEach((value, index) => {
+                     mediaMovelMortes.push(value["moving_average"])
+                }) 
+               acumuladoMediaMovel = mediaMovelMortes.reduce((value, index) => value + index, 0)
+               
+            })
             await app.db('dados_medias_solicitadas')
                 .select('Country', 'Date', 'newDeaths', 'Deaths', 'newCases', 'Confirmed')
                 .then(resp => todosOsDados.push(resp))
@@ -126,8 +132,7 @@ module.exports = app => {
                 .where({'Date': data})
                 .then((resp) => dadosObjetoSelecionado.push(resp))
                 .catch(err => res.send(err))
-
-            res.json([mediaMovelMortes[0],dadosObjetoSelecionado[0], todosOsDados[0]])
+            res.json([mediaMovelMortes,dadosObjetoSelecionado[0], todosOsDados[0],acumuladoMediaMovel])
         }else {
             return res.send('Data não pode ser nula!')
         }   

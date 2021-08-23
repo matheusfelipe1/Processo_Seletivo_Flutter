@@ -1,10 +1,18 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ComponenteCabecalhoTelaDetalhamento extends StatefulWidget {
   final List dados;
   final String data;
-  ComponenteCabecalhoTelaDetalhamento({this.dados, this.data});
+  final valorAcumulado;
+  final mediaMovelObjetoSelecioado;
+  ComponenteCabecalhoTelaDetalhamento(
+      {this.dados,
+      this.data,
+      this.valorAcumulado,
+      this.mediaMovelObjetoSelecioado});
   @override
   _ComponenteCabecalhoTelaDetalhamentoState createState() =>
       _ComponenteCabecalhoTelaDetalhamentoState();
@@ -12,6 +20,14 @@ class ComponenteCabecalhoTelaDetalhamento extends StatefulWidget {
 
 class _ComponenteCabecalhoTelaDetalhamentoState
     extends State<ComponenteCabecalhoTelaDetalhamento> {
+  bool valorPercentual;
+  bool valorPercentualMedia;
+  bool valorPercentualTotal;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Widget renderizaDados(String parametro, var dado) {
     return Container(
       margin: EdgeInsets.only(top: 5, bottom: 5),
@@ -56,14 +72,6 @@ class _ComponenteCabecalhoTelaDetalhamentoState
                             'Confirmados', e['Confirmed'].toString()),
                         renderizaDados(
                             'Recuperados', e['Recovered'].toString()),
-                        CircularPercentIndicator(
-                          animation: true,
-                          animationDuration: 3000,
-                          percent: 1.0,
-                          radius: 60.0,
-                          progressColor: Colors.blue,
-                          center: Text('Dados'),
-                        ),
                       ],
                     ),
                   ),

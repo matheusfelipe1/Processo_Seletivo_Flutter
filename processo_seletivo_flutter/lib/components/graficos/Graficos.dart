@@ -2,6 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:processo_seletivo_flutter/components/Componente_alerta_grafico/Componente_alerta_grafico.dart';
 import 'package:processo_seletivo_flutter/components/componente_diaolog_grafico/Componente_dialog_grafico.dart';
 import 'package:processo_seletivo_flutter/components/componente_legenda/Componente_legenda.dart';
 import 'package:processo_seletivo_flutter/components/model/model_grafico/Model_grafico.dart';
@@ -126,71 +127,15 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
                         constraints: BoxConstraints(),
                         child: GestureDetector(
                             onTap: () => Navigator.of(context).pop(),
-                            child: AlertDialog(
-                                title: Text('Dados Covid-19 bo Brasil hoje'),
-                                content: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Wrap(
-                                      direction: Axis.horizontal,
-                                      children: [
-                                        Text("Total de mortos: "),
-                                        Text(
-                                          "$morte",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ),
-                                    Wrap(
-                                      direction: Axis.horizontal,
-                                      children: [
-                                        Text(
-                                          "Total de confirmados: ",
-                                        ),
-                                        Text(
-                                          "$confirmados",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ),
-                                    Wrap(
-                                      direction: Axis.horizontal,
-                                      children: [
-                                        Text(
-                                          "Media Movel de mortos: ",
-                                        ),
-                                        Text(
-                                          "${formatter.format(morteMedia)}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ),
-                                    Wrap(
-                                      direction: Axis.horizontal,
-                                      children: [
-                                        Text(
-                                          "Media Movel de casos: ",
-                                        ),
-                                        Text(
-                                          "${formatter.format(confirmadoMedia)}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  ComponenteDialogGrafico(
-                                    mediaMovelCasosConfirmados: confirmadoMedia,
-                                    mediaMovelMortes: morteMedia,
-                                    totalConfirmados: confirmados,
-                                    totalMortes: morte,
-                                  ),
-                                ])),
+                            child: ComponenteAlertaGrafico(
+                              confirmadoMedia: confirmadoMedia,
+                              confirmadoMediaFormat:
+                                  formatter.format(confirmadoMedia),
+                              morteMediaFormat: formatter.format(morteMedia),
+                              confirmados: confirmados,
+                              morte: morte,
+                              morteMedia: morteMedia,
+                            )),
                       ),
                     );
                   }),
