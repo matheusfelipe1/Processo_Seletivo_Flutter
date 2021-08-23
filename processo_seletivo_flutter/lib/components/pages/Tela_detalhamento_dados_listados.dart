@@ -31,6 +31,8 @@ class _TelaDetalhamentoDadosListadosState
   obterDatas() {
     DateTime data = DateTime.parse(widget.data);
     DateTime dataParaCalculo = data.subtract(Duration(days: 15));
+    print(dataParaCalculo);
+    print(data);
     setState(() {
       dataParaEnvio = DateFormat("yyyy-MM-dd").format(data);
       dataParaCalcularMedia = DateFormat("yyyy-MM-dd").format(dataParaCalculo);
@@ -46,7 +48,7 @@ class _TelaDetalhamentoDadosListadosState
               setState(() {
                 mediaMovelObjetoSelecioado =
                     value["mediaMovelMortes"].toDouble();
-                print(mediaMovelObjetoSelecioado);
+                print(value);
               })
             });
   }
@@ -75,16 +77,24 @@ class _TelaDetalhamentoDadosListadosState
                 backgroundColor: Colors.purple[900],
                 title: Text('Detalhamento'),
               ),
-              body: ListView(
-                children: [
-                  ComponenteCabecalhoTelaDetalhamento(
-                    dados: objetoDaListaSelecionado,
-                    data: widget.data,
-                    valorAcumulado: mediaAcumulada,
-                    mediaMovelObjetoSelecioado: mediaMovelObjetoSelecioado,
-                  )
-                ],
-              ),
+              body: dadosParaCalcularMedia == null ||
+                      dadosParaCalcularMedia.isEmpty ||
+                      dadosParaCalcularMedia.length == 0
+                  ? Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          ComponenteCabecalhoTelaDetalhamento(
+                            dados: objetoDaListaSelecionado,
+                            title: widget.data,
+                            dadosParaCalcularMedia: dadosParaCalcularMedia,
+                            valorAcumulado: mediaAcumulada,
+                            mediaMovelObjetoSelecioado:
+                                mediaMovelObjetoSelecioado,
+                          )
+                        ],
+                      ),
+                    ),
             );
           } else {
             return Scaffold(

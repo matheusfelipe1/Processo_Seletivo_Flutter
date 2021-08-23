@@ -42,6 +42,7 @@ module.exports = app => {
                 var armazenaNovasMortes = []
                 var armazenaNovasConfirmados = []
                 var todosDados = []
+                var valorResultado = []
                 var totalMortes
                 var totalNovosCasos
                 var mediaMovelMortes 
@@ -50,7 +51,7 @@ module.exports = app => {
                     await connections.query('TRUNCATE TABLE dados_medias_solicitadas', function (error, results) {
                         if (error) return res.send(error)
                     })
-                    await connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+data2+'" AND Date <="'+data+'" ORDER BY Date DESC', 
+                    await connections.query('SELECT * FROM covidbrasil WHERE Date > "'+data2+'" AND Date <="'+data+'" ORDER BY Date DESC', 
                     function (error, results){
                         if(error) return res.send(error)
                         results.map((dados, index) => {
@@ -62,7 +63,10 @@ module.exports = app => {
                         for(var i = 0; i < results.length; i++) {
                             armazenaNovasConfirmados.push(novosCasos[i] - novosCasos[i+1])
                             armazenaNovasMortes.push(novosMortes[i] - novosMortes[i+1])
+                            
                         }
+                        results.pop()
+                        
                         /*
                         No algoritmo acima eu tive que gerar os dados das mortes e casos diários,
                         e nessa funcao eu tive que pegar o proximo indice e subtrair pelo atual indice,
@@ -70,6 +74,7 @@ module.exports = app => {
                         para buscar os dados de mortes e novos casos diários
 
                         */
+                       console.log(results);
                         armazenaNovasMortes.pop() 
                         armazenaNovasConfirmados.pop() 
                         totalMortes = armazenaNovasMortes.reduce((value, index) => value + index, 0)
@@ -123,8 +128,10 @@ module.exports = app => {
                acumuladoMediaMovel = mediaMovelMortes.reduce((value, index) => value + index, 0)
                
             })
+            
             await app.db('dados_medias_solicitadas')
                 .select('Country', 'Date', 'newDeaths', 'Deaths', 'newCases', 'Confirmed')
+                .orderBy('Date', 'desc')
                 .then(resp => todosOsDados.push(resp))
                 .catch(err => res.send(err))
             await app.db('covidbrasil')

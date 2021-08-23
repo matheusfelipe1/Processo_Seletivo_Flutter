@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:processo_seletivo_flutter/components/Componente_alerta_grafico/Componente_alerta_grafico.dart';
-import 'package:processo_seletivo_flutter/components/componente_diaolog_grafico/Componente_dialog_grafico.dart';
 import 'package:processo_seletivo_flutter/components/componente_legenda/Componente_legenda.dart';
 import 'package:processo_seletivo_flutter/components/model/model_grafico/Model_grafico.dart';
 import 'package:processo_seletivo_flutter/services/Services_graficos.dart';

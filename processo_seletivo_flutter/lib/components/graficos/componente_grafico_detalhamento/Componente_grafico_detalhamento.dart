@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:processo_seletivo_flutter/components/model/model_grafico/Model_grafico_Linear.dart';
 
 class ComponenteDialogGrafico extends StatefulWidget {
   final mediaMovelMortes;
@@ -23,26 +24,26 @@ class ComponenteDialogGrafico extends StatefulWidget {
 }
 
 class _ComponenteDialogGraficoState extends State<ComponenteDialogGrafico> {
-  static List<charts.Series<LinearSales, int>> _createSampleData(
+  static List<charts.Series<LinearGrafico, int>> _createSampleData(
       final mediaMovelMortes,
       final mediaMovelCasosConfirmados,
       final totalMortes,
       final totalConfirmados) {
-    final graficoDo = [
-      new LinearSales(2, totalMortes, MaterialPalette.red.shadeDefault),
-      new LinearSales(3, totalConfirmados, MaterialPalette.blue.shadeDefault),
-      new LinearSales(4, mediaMovelMortes, MaterialPalette.black),
-      new LinearSales(
+    final graficoMediaMovel = [
+      new LinearGrafico(2, totalMortes, MaterialPalette.red.shadeDefault),
+      new LinearGrafico(3, totalConfirmados, MaterialPalette.blue.shadeDefault),
+      new LinearGrafico(4, mediaMovelMortes, MaterialPalette.black),
+      new LinearGrafico(
           5, mediaMovelCasosConfirmados, MaterialPalette.yellow.shadeDefault),
     ];
 
     return [
-      new charts.Series<LinearSales, int>(
+      new charts.Series<LinearGrafico, int>(
         id: 'Sales',
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        colorFn: (LinearSales sales, _) => sales.color,
-        data: graficoDo,
+        domainFn: (LinearGrafico sales, _) => sales.year,
+        measureFn: (LinearGrafico sales, _) => sales.sales,
+        colorFn: (LinearGrafico sales, _) => sales.color,
+        data: graficoMediaMovel,
       ),
     ];
   }
@@ -67,13 +68,4 @@ class _ComponenteDialogGraficoState extends State<ComponenteDialogGrafico> {
       ),
     );
   }
-}
-
-/// Sample linear data type.
-class LinearSales {
-  final year;
-  final sales;
-  final color;
-
-  LinearSales(this.year, this.sales, this.color);
 }

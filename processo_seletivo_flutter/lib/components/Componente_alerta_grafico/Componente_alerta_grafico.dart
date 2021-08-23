@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:processo_seletivo_flutter/components/componente_diaolog_grafico/Componente_dialog_grafico.dart';
+import 'package:processo_seletivo_flutter/components/graficos/componente_diaolog_grafico/Componente_dialog_grafico.dart';
 
 class ComponenteAlertaGrafico extends StatefulWidget {
   var confirmadoMedia;
