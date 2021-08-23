@@ -121,91 +121,105 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
                   builder: (BuildContext context) {
                     NumberFormat formatter = NumberFormat("00.00");
 
-                    return GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: AlertDialog(
-                            title: Text('Dados Covid-19 bo Brasil hoje'),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
+                    return SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(),
+                        child: GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: AlertDialog(
+                                title: Text('Dados Covid-19 bo Brasil hoje'),
+                                content: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text("Total de mortos: "),
-                                    Text(
-                                      "$morte",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Total de confirmados: ",
+                                    Wrap(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Text("Total de mortos: "),
+                                        Text(
+                                          "$morte",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
                                     ),
-                                    Text(
-                                      "$confirmados",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Media Movel de mortos: ",
+                                    Wrap(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Text(
+                                          "Total de confirmados: ",
+                                        ),
+                                        Text(
+                                          "$confirmados",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
                                     ),
-                                    Text(
-                                      "${formatter.format(morteMedia)}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Media Movel de casos: ",
+                                    Wrap(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Text(
+                                          "Media Movel de mortos: ",
+                                        ),
+                                        Text(
+                                          "${formatter.format(morteMedia)}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
                                     ),
-                                    Text(
-                                      "${formatter.format(confirmadoMedia)}",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    )
+                                    Wrap(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Text(
+                                          "Media Movel de casos: ",
+                                        ),
+                                        Text(
+                                          "${formatter.format(confirmadoMedia)}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
-                            actions: [
-                              ComponenteDialogGrafico(
-                                mediaMovelCasosConfirmados: confirmadoMedia,
-                                mediaMovelMortes: morteMedia,
-                                totalConfirmados: confirmados,
-                                totalMortes: morte,
-                              ),
-                            ]));
-                  }),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Center(
-                    child: Text('Relatório de hoje',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 2,
-                    child: new charts.BarChart(
-                      _createSampleData(
-                        confirmados,
-                        morte,
-                        confirmadoMedia,
-                        morteMedia,
+                                actions: [
+                                  ComponenteDialogGrafico(
+                                    mediaMovelCasosConfirmados: confirmadoMedia,
+                                    mediaMovelMortes: morteMedia,
+                                    totalConfirmados: confirmados,
+                                    totalMortes: morte,
+                                  ),
+                                ])),
                       ),
-                      animate: animate,
-                    ),
+                    );
+                  }),
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Center(
+                        child: Text('Relatório de hoje',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 2,
+                        child: new charts.BarChart(
+                          _createSampleData(
+                            confirmados,
+                            morte,
+                            confirmadoMedia,
+                            morteMedia,
+                          ),
+                          animate: animate,
+                        ),
+                      ),
+                      ComponentLegenda()
+                    ],
                   ),
-                  ComponentLegenda()
-                ],
+                ),
               ),
             ));
   }

@@ -9,8 +9,10 @@ class ComponentLegenda extends StatelessWidget {
   ) {
     return Container(
       margin: EdgeInsets.only(top: 5, bottom: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Wrap(
+        direction: Axis.horizontal,
+        spacing: 8.0,
+        runSpacing: 4.0,
         children: [
           Container(
             child: Row(
@@ -53,20 +55,22 @@ class ComponentLegenda extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            RenderizaLegendas('Confirmados', 'Media Móvel Confirmados',
-                Colors.blue, Colors.yellow),
-            RenderizaLegendas(
-                'Mortes', 'Media Móvel Mortes ', Colors.red, Colors.black),
-          ],
+    return SingleChildScrollView(
+      child: Container(
+          child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              RenderizaLegendas('Confirmados', 'Media Móvel Confirmados',
+                  Colors.blue, Colors.yellow),
+              RenderizaLegendas(
+                  'Mortes', 'Media Móvel Mortes ', Colors.red, Colors.black),
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 }

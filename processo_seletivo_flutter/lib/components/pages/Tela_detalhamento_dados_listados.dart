@@ -19,7 +19,7 @@ class TelaDetalhamentoDadosListados extends StatefulWidget {
 class _TelaDetalhamentoDadosListadosState
     extends State<TelaDetalhamentoDadosListados> {
   List dadosObjetoSelecionado;
-  List todasMediasMoveis = [];
+  List<int> todasMediasMoveis = [];
   List objetoDaListaSelecionado = [];
   List dadosParaCalcularMedia = [];
 
@@ -61,7 +61,9 @@ class _TelaDetalhamentoDadosListadosState
             todasMediasMoveis.addAll(dadosObjetoSelecionado[0]);
             objetoDaListaSelecionado.addAll(dadosObjetoSelecionado[1]);
             dadosParaCalcularMedia.addAll(dadosObjetoSelecionado[2]);
-
+            var total = todasMediasMoveis.reduce(
+              (key, value) => (key + value),
+            );
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.purple[900],

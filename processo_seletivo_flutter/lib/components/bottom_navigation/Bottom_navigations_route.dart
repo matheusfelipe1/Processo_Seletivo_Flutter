@@ -17,6 +17,7 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: _telas[paginaAtualIndice],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
