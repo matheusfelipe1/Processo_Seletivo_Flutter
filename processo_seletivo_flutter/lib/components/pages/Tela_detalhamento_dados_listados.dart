@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:processo_seletivo_flutter/components/Componente_cabecalho_tela_detalhamento/Componente_cabecalho_tela_detalhamento.dart';
+import 'package:processo_seletivo_flutter/services/Service_nova_media_movel_lista.dart';
 import 'package:processo_seletivo_flutter/services/Services_detalhamento.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,39 +18,66 @@ class TelaDetalhamentoDadosListados extends StatefulWidget {
 
 class _TelaDetalhamentoDadosListadosState
     extends State<TelaDetalhamentoDadosListados> {
-  var dadosObjetoSelecionado;
+  List dadosObjetoSelecionado;
+  List todasMediasMoveis = [];
+  List objetoDaListaSelecionado = [];
+  List dadosParaCalcularMedia = [];
 
   var dataParaEnvio;
+  var dataParaCalcularMedia;
+
+  obterDatas() {
+    DateTime data = DateTime.parse(widget.data);
+    DateTime dataParaCalculo = data.subtract(Duration(days: 15));
+    setState(() {
+      dataParaEnvio = DateFormat("yyyy-MM-dd").format(data);
+      dataParaCalcularMedia = DateFormat("yyyy-MM-dd").format(dataParaCalculo);
+      print(dataParaCalcularMedia);
+    });
+  }
+
+  obterNovaMedia() {
+    obterNovaMediaMovelPelaLista(http.Client(),
+            dataParaEnvio: dataParaEnvio,
+            dataParaCalculoMedia: dataParaCalcularMedia)
+        .then((value) => {print(value)});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    DateTime data = DateTime.parse(widget.data);
-    setState(() {
-      dataParaEnvio = DateFormat("yyyy-MM-dd").format(data);
-    });
+    this.obterDatas();
+    this.obterNovaMedia();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
+    return FutureBuilder<String>(
         future: obterDetalhamento(http.Client(), dataParaEnvio: dataParaEnvio),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            dadosObjetoSelecionado = snapshot.data[1];
+            dadosObjetoSelecionado = json.decode(snapshot.data);
+            todasMediasMoveis.addAll(dadosObjetoSelecionado[0]);
+            objetoDaListaSelecionado.addAll(dadosObjetoSelecionado[1]);
+            dadosParaCalcularMedia.addAll(dadosObjetoSelecionado[2]);
 
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.purple[900],
                 title: Text('Detalhamento'),
               ),
-              body: Column(
-                children: [],
+              body: ListView(
+                children: [
+                  ComponenteCabecalhoTelaDetalhamento(
+                      dados: objetoDaListaSelecionado, data: widget.data)
+                ],
               ),
             );
           } else {
             return Scaffold(
               appBar: AppBar(
+                backgroundColor: Colors.purple[900],
                 title: Text('Detalhamento'),
               ),
               body: Center(

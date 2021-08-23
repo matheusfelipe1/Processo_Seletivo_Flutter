@@ -128,7 +128,7 @@ module.exports = app => {
                 .then((resp) => dadosObjetoSelecionado.push(resp))
                 .catch(err => res.send(err))
 
-            res.json([mediaMovelMortes[0][0],dadosObjetoSelecionado[0][0], todosOsDados[0]])
+            res.json([mediaMovelMortes[0],dadosObjetoSelecionado[0], todosOsDados[0]])
         }else {
             return res.send('Data não pode ser nula!')
         }   
