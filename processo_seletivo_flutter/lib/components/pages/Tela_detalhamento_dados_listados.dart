@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:processo_seletivo_flutter/components/Componente_cabecalho_tela_detalhamento/Componente_cabecalho_tela_detalhamento.dart';
+import 'package:processo_seletivo_flutter/components/lista/Lista_detalhamento.dart';
 import 'package:processo_seletivo_flutter/services/Service_nova_media_movel_lista.dart';
 import 'package:processo_seletivo_flutter/services/Services_detalhamento.dart';
 import 'package:http/http.dart' as http;
@@ -108,6 +109,20 @@ class _TelaDetalhamentoDadosListadosState
                     title: widget.data,
                     valorAcumulado: acumulado,
                     mediaMovelObjetoSelecioado: mediaMovelObjetoSelecioado,
+                  ),
+                  Divider(
+                    color: Colors.black,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 13, bottom: 13),
+                    child: Text(
+                      'Dados utlizados para calcular Média Movel',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  ),
+                  ListaDetalhamento(
+                    dados: dadosParaCalcularMedia,
                   )
                 ],
               ),

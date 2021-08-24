@@ -22,6 +22,8 @@ class _ListaState extends State<Lista> {
             ? 0
             : widget.renderizaDados.length,
         itemBuilder: (BuildContext context, int indice) {
+          var pais =
+              widget.renderizaDados[indice]['Country'].replaceAll('z', 's');
           DateTime data =
               DateTime.parse(widget.renderizaDados[indice]['Date'].toString());
           return Column(
@@ -36,8 +38,7 @@ class _ListaState extends State<Lista> {
                               data: widget.renderizaDados[indice]['Date'],
                             ))),
                     child: ListTile(
-                        title: Text(widget.renderizaDados[indice]['Country']
-                            .toString()),
+                        title: Text(pais.toString()),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

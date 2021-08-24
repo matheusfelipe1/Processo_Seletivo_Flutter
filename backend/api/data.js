@@ -130,7 +130,7 @@ module.exports = app => {
             })
 
             await app.db('dados_medias_solicitadas')
-                .select('Country', 'Date', 'newDeaths', 'Confirmed', 'newCases')
+                .select('Country', 'Date', 'newDeaths', 'Deaths', 'Confirmed', 'newCases')
                 .orderBy('Date', 'desc')
                 .then((resp) => dadosParaCalcularMedia.push(resp))
                 .catch(err => res.send(err))
