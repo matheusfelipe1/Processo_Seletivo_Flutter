@@ -89,7 +89,7 @@ class _TelaDetalhamentoDadosListadosState
     print(dadosObjetoSelecionado);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple[900],
+        backgroundColor: Colors.blue[900],
         title: Text('Detalhamento'),
       ),
       body: dadosParaCalcularMedia == null ||

@@ -20,10 +20,9 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
       resizeToAvoidBottomInset: false,
       body: _telas[paginaAtualIndice],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        fixedColor: Colors.purple[900],
-        elevation: 50,
         currentIndex: paginaAtualIndice,
+        backgroundColor: Colors.blue[900],
+        fixedColor: Colors.white,
         onTap: (indice) {
           setState(() {
             paginaAtualIndice = indice;
@@ -31,7 +30,7 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.coronavirus),
+            icon: Icon(Icons.graphic_eq),
             label: "Gráficos",
           ),
           BottomNavigationBarItem(

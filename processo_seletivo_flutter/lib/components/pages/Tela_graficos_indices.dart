@@ -14,7 +14,7 @@ class _TelaGraficosIndicesState extends State<TelaGraficosIndices> {
         appBar: AppBar(
             leading: Icon(Icons.coronavirus),
             title: Text('Processo Seletivo Mobilus'),
-            backgroundColor: Colors.purple[900]),
+            backgroundColor: Colors.blue[900]),
         body: Grafico());
   }
 }

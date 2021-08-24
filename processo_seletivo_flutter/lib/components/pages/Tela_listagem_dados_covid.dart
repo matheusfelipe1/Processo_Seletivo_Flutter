@@ -103,7 +103,7 @@ class _TelaInicialState extends State<TelaDeListagemDosDadosCovid> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.purple[900],
+        backgroundColor: Colors.blue[900],
         title: pesquisando ? filtrando() : Text('Processo Seletivo Mobilus'),
         leading: pesquisando ? null : Icon(Icons.coronavirus),
         actions: [

@@ -85,7 +85,7 @@ class _ComponenteCabecalhoTelaDetalhamentoState
                                   );
                                 }));
                               },
-                              backgroundColor: Colors.purple[900],
+                              backgroundColor: Colors.blue[900],
                               child: Icon(Icons.graphic_eq_outlined),
                             ),
                           ],

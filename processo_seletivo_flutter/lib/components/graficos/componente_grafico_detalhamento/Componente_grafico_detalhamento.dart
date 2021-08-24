@@ -24,6 +24,7 @@ class ComponenteGraficoDetalhamento extends StatelessWidget {
           totalCasosObjetoSelecionado,
           totalMortesObjetoSelecionado,
         ),
+        animationDuration: Duration(seconds: 4),
         animate: true);
   }
 
