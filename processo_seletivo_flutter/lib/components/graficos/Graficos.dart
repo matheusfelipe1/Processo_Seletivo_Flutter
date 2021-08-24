@@ -157,6 +157,7 @@ class _GraficoTimeSeriesChartState extends State<Grafico> {
                             confirmadoMedia,
                             morteMedia,
                           ),
+                          animationDuration: Duration(seconds: 5),
                           animate: animate,
                         ),
                       ),

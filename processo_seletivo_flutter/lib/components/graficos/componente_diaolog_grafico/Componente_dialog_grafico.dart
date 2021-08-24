@@ -62,6 +62,7 @@ class _ComponenteDialogGraficoState extends State<ComponenteDialogGrafico> {
                     widget.mediaMovelCasosConfirmados,
                     widget.totalMortes,
                     widget.totalConfirmados),
+                animationDuration: Duration(seconds: 5),
                 animate: true),
           )
         ],
