@@ -12,7 +12,7 @@ obterDetalhamento(http.Client cliente, {final String dataParaEnvio}) async {
       headers: {'Content-Type': 'application/json'},
       body: _body);
   if (resposta.statusCode == 200) {
-    return utf8.decode(resposta.body.toString().runes.toList());
+    return json.decode(utf8.decode(resposta.body.toString().runes.toList()));
   }
   return null;
 }

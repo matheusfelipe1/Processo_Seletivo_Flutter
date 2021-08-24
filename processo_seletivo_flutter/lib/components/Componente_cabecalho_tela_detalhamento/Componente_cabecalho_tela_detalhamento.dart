@@ -6,14 +6,12 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ComponenteCabecalhoTelaDetalhamento extends StatefulWidget {
   final List dados;
-  final List dadosParaCalcularMedia;
   final String title;
   final valorAcumulado;
   final mediaMovelObjetoSelecioado;
   ComponenteCabecalhoTelaDetalhamento(
       {this.dados,
       this.title,
-      this.dadosParaCalcularMedia,
       this.valorAcumulado,
       this.mediaMovelObjetoSelecioado});
   @override
@@ -26,6 +24,7 @@ class _ComponenteCabecalhoTelaDetalhamentoState
   @override
   void initState() {
     super.initState();
+    print(widget.dados);
   }
 
   Widget renderizaDados(String parametro, var dado) {
@@ -82,38 +81,6 @@ class _ComponenteCabecalhoTelaDetalhamentoState
     return Column(
       children: [
         renderizaTela(widget.dados),
-        Divider(
-          color: Colors.black,
-        ),
-        Container(
-            margin: EdgeInsets.only(top: 15, bottom: 15),
-            child: Text('Dados o para calculo da Média Movel',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold))),
-        Column(
-          children: widget.dadosParaCalcularMedia.map((e) {
-            DateTime data = DateTime.parse(e['Date'].toString().split("T")[0]);
-            return new Column(
-              children: [
-                Container(
-                    child: Card(
-                        child: ListTile(
-                  title: Text(e["Country"].toString().replaceAll("z", "s")),
-                  subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Novas Mortes: ${e["newDeaths"].toString()}"),
-                        Text(
-                            "Total de Mortes neste dia: ${e["Deaths"].toString()}"),
-                        Text("Novas Casos: ${e["newCases"].toString()}"),
-                        Text(
-                            "Total de Casos neste dia: ${e["Confirmed"].toString()}"),
-                      ]),
-                  trailing: Text(DateFormat("dd-MM-yyyy").format(data)),
-                )))
-              ],
-            );
-          }).toList(),
-        )
       ],
     );
   }

@@ -25,6 +25,7 @@ class _TelaDetalhamentoDadosListadosState
   String totalAcumuladoMediaMovel;
   double mediaAcumulada;
   double mediaMovelObjetoSelecioado;
+  var acumulado;
   var dataParaEnvio;
   var dataParaCalcularMedia;
 
@@ -48,7 +49,20 @@ class _TelaDetalhamentoDadosListadosState
               setState(() {
                 mediaMovelObjetoSelecioado =
                     value["mediaMovelMortes"].toDouble();
-                print(value);
+              })
+            });
+  }
+
+  obterDados() {
+    var no;
+    obterDetalhamento(http.Client(), dataParaEnvio: dataParaEnvio)
+        .then((value) => {
+              setState(() {
+                acumulado = value["acumuladoMediaMovel"].toString();
+                todasMediasMoveis.addAll(value["mediaMovelMortes"]);
+                dadosObjetoSelecionado = value["dadosObjetoSelecionado"];
+                dadosParaCalcularMedia
+                    .addAll(value["dadosParaCalcularMedia"][0]);
               })
             });
   }
@@ -58,55 +72,46 @@ class _TelaDetalhamentoDadosListadosState
     // TODO: implement initState
     super.initState();
     this.obterDatas();
+    this.obterDados();
     this.obterNovaMedia();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
-        future: obterDetalhamento(http.Client(), dataParaEnvio: dataParaEnvio),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            dadosObjetoSelecionado = json.decode(snapshot.data.toString());
-            todasMediasMoveis.addAll(dadosObjetoSelecionado[0]);
-            objetoDaListaSelecionado.addAll(dadosObjetoSelecionado[1]);
-            dadosParaCalcularMedia.addAll(dadosObjetoSelecionado[2]);
-            mediaAcumulada = dadosObjetoSelecionado[3].toDouble();
-            return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.purple[900],
-                title: Text('Detalhamento'),
+    print(dadosObjetoSelecionado);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.purple[900],
+        title: Text('Detalhamento'),
+      ),
+      body: dadosParaCalcularMedia == null ||
+              dadosParaCalcularMedia.isEmpty ||
+              dadosParaCalcularMedia.length == 0 ||
+              todasMediasMoveis == null ||
+              todasMediasMoveis.isEmpty ||
+              todasMediasMoveis.length == 0 ||
+              acumulado == null ||
+              acumulado.isEmpty ||
+              acumulado.length == 0 ||
+              dadosObjetoSelecionado == null ||
+              dadosObjetoSelecionado.isEmpty ||
+              dadosObjetoSelecionado.length == 0 ||
+              mediaMovelObjetoSelecioado == null ||
+              mediaMovelObjetoSelecioado.toString().isEmpty ||
+              mediaMovelObjetoSelecioado.toString().length == 0
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  ComponenteCabecalhoTelaDetalhamento(
+                    dados: dadosObjetoSelecionado,
+                    title: widget.data,
+                    valorAcumulado: acumulado,
+                    mediaMovelObjetoSelecioado: mediaMovelObjetoSelecioado,
+                  )
+                ],
               ),
-              body: dadosParaCalcularMedia == null ||
-                      dadosParaCalcularMedia.isEmpty ||
-                      dadosParaCalcularMedia.length == 0
-                  ? Center(child: CircularProgressIndicator())
-                  : SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          ComponenteCabecalhoTelaDetalhamento(
-                            dados: objetoDaListaSelecionado,
-                            title: widget.data,
-                            dadosParaCalcularMedia: dadosParaCalcularMedia,
-                            valorAcumulado: mediaAcumulada,
-                            mediaMovelObjetoSelecioado:
-                                mediaMovelObjetoSelecioado,
-                          )
-                        ],
-                      ),
-                    ),
-            );
-          } else {
-            return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.purple[900],
-                title: Text('Detalhamento'),
-              ),
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        });
+            ),
+    );
   }
 }
