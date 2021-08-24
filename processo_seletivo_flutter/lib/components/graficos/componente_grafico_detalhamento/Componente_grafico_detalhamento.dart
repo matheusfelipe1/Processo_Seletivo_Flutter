@@ -4,68 +4,63 @@ import 'dart:convert';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:processo_seletivo_flutter/components/model/model_grafico/Model_grafico_Linear.dart';
 
-class ComponenteDialogGrafico extends StatefulWidget {
-  final mediaMovelMortes;
-  final mediaMovelCasosConfirmados;
-  final totalMortes;
-  final totalConfirmados;
-
-  ComponenteDialogGrafico(
-      {this.mediaMovelMortes,
-      this.mediaMovelCasosConfirmados,
-      this.totalMortes,
-      this.totalConfirmados});
-
+class ComponenteGraficoDetalhamento extends StatelessWidget {
+  final mediaMovelObjetoSelecionado;
+  final mediaMovelCasosObjetoSelecionado;
+  final totalCasosObjetoSelecionado;
+  final totalMortesObjetoSelecionado;
+  ComponenteGraficoDetalhamento(
+      {this.mediaMovelObjetoSelecionado,
+      this.mediaMovelCasosObjetoSelecionado,
+      this.totalCasosObjetoSelecionado,
+      this.totalMortesObjetoSelecionado});
   @override
-  _ComponenteDialogGraficoState createState() =>
-      _ComponenteDialogGraficoState();
-}
+  Widget build(BuildContext context) {
+    return new charts.PieChart(
+        _createSampleData(
+          mediaMovelObjetoSelecionado,
+          mediaMovelCasosObjetoSelecionado,
+          totalCasosObjetoSelecionado,
+          totalMortesObjetoSelecionado,
+        ),
+        animate: true);
+  }
 
-class _ComponenteDialogGraficoState extends State<ComponenteDialogGrafico> {
-  static List<charts.Series<LinearGrafico, int>> _createSampleData(
-      final mediaMovelMortes,
-      final mediaMovelCasosConfirmados,
-      final totalMortes,
-      final totalConfirmados) {
-    final graficoMediaMovel = [
-      new LinearGrafico(2, totalMortes, MaterialPalette.red.shadeDefault),
-      new LinearGrafico(3, totalConfirmados, MaterialPalette.blue.shadeDefault),
-      new LinearGrafico(4, mediaMovelMortes, MaterialPalette.black),
-      new LinearGrafico(
-          5, mediaMovelCasosConfirmados, MaterialPalette.yellow.shadeDefault),
+  /// Create one series with sample hard coded data.
+  static List<charts.Series<ModelGraficos, int>> _createSampleData(
+    final mediaMovelObjetoSelecionado,
+    final mediaMovelCasosObjetoSelecionado,
+    final totalCasosObjetoSelecionado,
+    final totalMortesObjetoSelecionado,
+  ) {
+    final data = [
+      new ModelGraficos(0, mediaMovelObjetoSelecionado, MaterialPalette.black),
+      new ModelGraficos(1, mediaMovelCasosObjetoSelecionado,
+          MaterialPalette.yellow.shadeDefault),
+      new ModelGraficos(
+          2, totalCasosObjetoSelecionado, MaterialPalette.blue.shadeDefault),
+      new ModelGraficos(
+          3, totalMortesObjetoSelecionado, MaterialPalette.red.shadeDefault),
     ];
 
     return [
-      new charts.Series<LinearGrafico, int>(
+      new charts.Series<ModelGraficos, int>(
         id: 'Sales',
-        domainFn: (LinearGrafico sales, _) => sales.year,
-        measureFn: (LinearGrafico sales, _) => sales.sales,
-        colorFn: (LinearGrafico sales, _) => sales.color,
-        data: graficoMediaMovel,
+        domainFn: (ModelGraficos valor, _) => valor.periodo,
+        measureFn: (ModelGraficos valor, _) => valor.valor,
+        colorFn: (ModelGraficos valor, _) => valor.color,
+        data: data,
       ),
     ];
   }
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 2,
-            child: new charts.PieChart(
-                _createSampleData(
-                    widget.mediaMovelMortes,
-                    widget.mediaMovelCasosConfirmados,
-                    widget.totalMortes,
-                    widget.totalConfirmados),
-                animate: true),
-          )
-        ],
-      ),
-    );
-  }
+/// Sample linear data type.
+class ModelGraficos {
+  final periodo;
+  final valor;
+  final Color color;
+
+  ModelGraficos(this.periodo, this.valor, this.color);
 }

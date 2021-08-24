@@ -2,18 +2,24 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:processo_seletivo_flutter/components/pages/Tela_graficos_detalhamento.dart';
 
 class ComponenteCabecalhoTelaDetalhamento extends StatefulWidget {
   final List dados;
   final String title;
   final valorAcumulado;
-  final mediaMovelObjetoSelecioado;
+  var mediaMovelObjetoSelecionado;
+  var mediaCasoslObjetoSelecionado;
+  var totalMortesObjetoSelecionado;
+  var totalCasosObjetoSelecionado;
   ComponenteCabecalhoTelaDetalhamento(
       {this.dados,
       this.title,
       this.valorAcumulado,
-      this.mediaMovelObjetoSelecioado});
+      this.mediaMovelObjetoSelecionado,
+      this.mediaCasoslObjetoSelecionado,
+      this.totalMortesObjetoSelecionado,
+      this.totalCasosObjetoSelecionado});
   @override
   _ComponenteCabecalhoTelaDetalhamentoState createState() =>
       _ComponenteCabecalhoTelaDetalhamentoState();
@@ -41,6 +47,7 @@ class _ComponenteCabecalhoTelaDetalhamentoState
 
   Widget renderizaTela(List lista) {
     var title = widget.title.replaceAll('z', 's');
+
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,10 +61,34 @@ class _ComponenteCabecalhoTelaDetalhamentoState
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          e["Country"].split("z").join("s"),
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              e["Country"].split("z").join("s"),
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                            FloatingActionButton(
+                              onPressed: () {
+                                return Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (ctx) {
+                                  return TelaGraficosDetalhamento(
+                                    mediaMovelCasosObjetoSelecionado:
+                                        widget.mediaCasoslObjetoSelecionado,
+                                    mediaMovelObjetoSelecionado:
+                                        widget.mediaMovelObjetoSelecionado,
+                                    totalCasosObjetoSelecionado:
+                                        widget.totalCasosObjetoSelecionado,
+                                    totalMortesObjetoSelecionado:
+                                        widget.totalMortesObjetoSelecionado,
+                                  );
+                                }));
+                              },
+                              backgroundColor: Colors.purple[900],
+                              child: Icon(Icons.graphic_eq_outlined),
+                            ),
+                          ],
                         ),
                         renderizaDados('Data', title),
                         renderizaDados('Mortos', e["Deaths"].toString()),
@@ -66,7 +97,7 @@ class _ComponenteCabecalhoTelaDetalhamentoState
                         renderizaDados(
                             'Recuperados', e['Recovered'].toString()),
                         renderizaDados('Média Movel de Mortes',
-                            "${widget.mediaMovelObjetoSelecioado}"),
+                            "${NumberFormat("00.00").format(widget.mediaMovelObjetoSelecionado)}"),
                         renderizaDados('Total das Médias de Mortes Solicitadas',
                             "${widget.valorAcumulado}")
                       ],

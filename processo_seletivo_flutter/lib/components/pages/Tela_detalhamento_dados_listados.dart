@@ -25,7 +25,10 @@ class _TelaDetalhamentoDadosListadosState
   List dadosParaCalcularMedia = [];
   String totalAcumuladoMediaMovel;
   double mediaAcumulada;
-  double mediaMovelObjetoSelecioado;
+  var mediaMovelObjetoSelecionado;
+  var mediaMovelDeCasosObjetoSelecionado;
+  var totalCasosObjetoSelecionado;
+  var totalMortesObjetoSelecionado;
   var acumulado;
   var dataParaEnvio;
   var dataParaCalcularMedia;
@@ -48,8 +51,12 @@ class _TelaDetalhamentoDadosListadosState
             dataParaCalculoMedia: dataParaCalcularMedia)
         .then((value) => {
               setState(() {
-                mediaMovelObjetoSelecioado =
-                    value["mediaMovelMortes"].toDouble();
+                mediaMovelObjetoSelecionado = value["mediaMovelMortes"];
+                mediaMovelDeCasosObjetoSelecionado =
+                    value["mediaMovelConfirmados"];
+                totalMortesObjetoSelecionado = value["totalMortes"];
+                totalCasosObjetoSelecionado = value["totalNovosCasos"];
+                print(value);
               })
             });
   }
@@ -97,9 +104,9 @@ class _TelaDetalhamentoDadosListadosState
               dadosObjetoSelecionado == null ||
               dadosObjetoSelecionado.isEmpty ||
               dadosObjetoSelecionado.length == 0 ||
-              mediaMovelObjetoSelecioado == null ||
-              mediaMovelObjetoSelecioado.toString().isEmpty ||
-              mediaMovelObjetoSelecioado.toString().length == 0
+              mediaMovelObjetoSelecionado == null ||
+              mediaMovelObjetoSelecionado.toString().isEmpty ||
+              mediaMovelObjetoSelecionado.toString().length == 0
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
@@ -108,10 +115,14 @@ class _TelaDetalhamentoDadosListadosState
                     dados: dadosObjetoSelecionado,
                     title: widget.data,
                     valorAcumulado: acumulado,
-                    mediaMovelObjetoSelecioado: mediaMovelObjetoSelecioado,
+                    mediaMovelObjetoSelecionado: mediaMovelObjetoSelecionado,
+                    mediaCasoslObjetoSelecionado:
+                        mediaMovelDeCasosObjetoSelecionado,
+                    totalCasosObjetoSelecionado: totalCasosObjetoSelecionado,
+                    totalMortesObjetoSelecionado: totalMortesObjetoSelecionado,
                   ),
                   Divider(
-                    color: Colors.black,
+                    color: Colors.black45,
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 13, bottom: 13),
