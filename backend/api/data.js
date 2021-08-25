@@ -163,7 +163,9 @@ module.exports = app => {
         var todosDados = []
         var requisicao = {...req.body}
         var latitude = requisicao.latitude        
-        var longitude = requisicao.longitude        
+        var longitude = requisicao.longitude
+        var mortesDaUltimaAtualizacao;        
+        var casosDaUltimaAtualizacao;        
             connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+dataReq+'" ORDER BY Date DESC', function (error, results){
                 if(error) return res.send(error)
                 results.map((dados, index) => {
@@ -179,7 +181,9 @@ module.exports = app => {
                     todosDados.push({confirmed: results[i]["Confirmed"], deaths: results[i]["Deaths"],
                       newDeaths: armazenaNovasMortes[i], newCases: armazenaNovasConfirmados[i] })
                 }
-                
+                mortesDaUltimaAtualizacao =  armazenaNovasMortes[0]           
+                casosDaUltimaAtualizacao =  armazenaNovasConfirmados[0]           
+               
                 /*
                 No algoritmo acima eu tive que gerar os dados das mortes e casos diários,
                 e nessa funcao eu tive que pegar o proximo indice e subtrair pelo atual indice,
@@ -209,7 +213,7 @@ module.exports = app => {
                     .then(() => res.send())
                     .catch(err => res.send(err))
                 
-                    res.json({totalMortes, maiorNumeroMortes, totalCasos, maiorNumeroCasos, results})
+                    res.json({totalMortes, mortesDaUltimaAtualizacao, casosDaUltimaAtualizacao , maiorNumeroMortes, totalCasos, maiorNumeroCasos, results})
 
               })
 

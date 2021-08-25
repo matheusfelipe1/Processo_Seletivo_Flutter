@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:processo_seletivo_flutter/components/pages/Tela_graficos_indices.dart';
-import 'package:processo_seletivo_flutter/components/pages/Tela_inicio.dart';
+import 'package:processo_seletivo_flutter/components/pages/Tela_do_mes_atual.dart';
 import 'package:processo_seletivo_flutter/components/pages/Tela_listagem_dados_covid.dart';
 
 class BottomNavigationRoute extends StatefulWidget {
@@ -10,8 +10,8 @@ class BottomNavigationRoute extends StatefulWidget {
 
 class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
   final List<Widget> _telas = [
-    TelaInicio(),
     TelaDeListagemDosDadosCovid(),
+    TelaInicio(),
     TelaGraficosIndices(),
   ];
   int paginaAtualIndice = 0;
@@ -31,12 +31,12 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Início",
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: "Lista",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.today),
+            label: "Hoje",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.graphic_eq),
