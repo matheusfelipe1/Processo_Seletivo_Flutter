@@ -49,12 +49,10 @@ class _ComponenteCabecalhoTelaDetalhamentoState
     var title = widget.title.replaceAll('z', 's');
 
     return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: lista
             .map((e) => Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 2,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: new Column(

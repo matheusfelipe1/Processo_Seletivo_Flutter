@@ -151,31 +151,35 @@ module.exports = app => {
     }
 
     const dadosDoMes = async (req, res) => {
-
-        var params = {...req.body}
-        var data = `${params.data}T00:00:00Z` //esta é a data principal, a outra é apenas um calculo de 14 dias antes para fazer a media movel
-        var data2 = `${params.data2}T00:00:00Z`
-        var dataHoje = `${params.dataConsulta}`
+        var mes = new Date().getMonth();
+        var ano = new Date().getFullYear();
+        var dia = Math.abs(new Date().getDay() - new Date().getDay())
+        var date = new Date(ano, mes, dia)
+        var dataReq = `${date.toLocaleDateString().split("/").reverse().join("-")}T00:00:00Z`;
+        var dataConsulta = new Date();
         var novosCasos = []
         var novosMortes = []
         var armazenaNovasMortes = []
         var armazenaNovasConfirmados = []
         var todosDados = []
         var dataApi = []
-        if(data.toString() != null || data.toString().length != 0) {
-            connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+data2+'" AND Date <="'+data+'" ORDER BY Date DESC', function (error, results){
+        
+            connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+dataReq+'" ORDER BY Date DESC', function (error, results){
                 if(error) return res.send(error)
                 results.map((dados, index) => {
                     novosCasos.push(dados['Confirmed'])
                     novosMortes.push(dados['Deaths'])
-                    dataApi.push(dados['Date'])
                 })
 
-                todosDados.push(results)
+                console.log(results.length);
+                console.log(dataReq);
                 for(var i = 0; i < results.length; i++) {
                     armazenaNovasConfirmados.push(novosCasos[i] - novosCasos[i+1])
                     armazenaNovasMortes.push(novosMortes[i] - novosMortes[i+1])
+                    todosDados.push({confirmed: results[i]["Confirmed"], deaths: results[i]["Deaths"],
+                     date: results[i]["Date"], newDeaths: armazenaNovasMortes[i], newCases: armazenaNovasConfirmados[i] })
                 }
+                
                 /*
                 No algoritmo acima eu tive que gerar os dados das mortes e casos diários,
                 e nessa funcao eu tive que pegar o proximo indice e subtrair pelo atual indice,
@@ -183,21 +187,19 @@ module.exports = app => {
                 para buscar os dados de mortes e novos casos diários
 
                 */
-                armazenaNovasMortes.pop() 
-                armazenaNovasConfirmados.pop() 
+                
+                todosDados.pop()
+                
+                var maiorNumeroMortes = todosDados.sort(function(a, b){return b["newDeaths"] - a["newDeaths"]})[0];
+                var maiorNumeroCasos = todosDados.sort(function(a, b){return b["newDeaths"] - a["newDeaths"]})[0];
+
+                console.log(maiorNumeroMortes);
+                console.log(maiorNumeroCasos);
                 
 
-                for (var i in results) {
-                connections.query('INSERT INTO dados_do_mes (Deaths, Date, DateApi, Confirmed, latitude, longitude) VALUES (?,?,?,?,?,?)', 
-                [armazenaNovasMortes[i], dataApi[i], dataHoje, armazenaNovasConfirmados[i], params.latitude, params.longitude],
-                function (error, results){
+              })
 
-                })
-            }})
-
-        }else {
-            return res.send('Data não pode ser nula!')
-        }
+        
     }
 
     return {mostraTodos, mediaDeMortes, buscarDadosDasMedias, dadosDoMes}
