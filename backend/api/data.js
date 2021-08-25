@@ -156,14 +156,14 @@ module.exports = app => {
         var dia = Math.abs(new Date().getDay() - new Date().getDay())
         var date = new Date(ano, mes, dia)
         var dataReq = `${date.toLocaleDateString().split("/").reverse().join("-")}T00:00:00Z`;
-        var dataConsulta = new Date();
         var novosCasos = []
         var novosMortes = []
         var armazenaNovasMortes = []
         var armazenaNovasConfirmados = []
         var todosDados = []
-        var dataApi = []
-        
+        var requisicao = {...req.body}
+        var latitude = requisicao.latitude        
+        var longitude = requisicao.longitude        
             connections.query('SELECT * FROM covidbrasil WHERE Date >= "'+dataReq+'" ORDER BY Date DESC', function (error, results){
                 if(error) return res.send(error)
                 results.map((dados, index) => {
@@ -177,7 +177,7 @@ module.exports = app => {
                     armazenaNovasConfirmados.push(novosCasos[i] - novosCasos[i+1])
                     armazenaNovasMortes.push(novosMortes[i] - novosMortes[i+1])
                     todosDados.push({confirmed: results[i]["Confirmed"], deaths: results[i]["Deaths"],
-                     date: results[i]["Date"], newDeaths: armazenaNovasMortes[i], newCases: armazenaNovasConfirmados[i] })
+                      newDeaths: armazenaNovasMortes[i], newCases: armazenaNovasConfirmados[i] })
                 }
                 
                 /*
@@ -190,12 +190,26 @@ module.exports = app => {
                 
                 todosDados.pop()
                 
-                var maiorNumeroMortes = todosDados.sort(function(a, b){return b["newDeaths"] - a["newDeaths"]})[0];
-                var maiorNumeroCasos = todosDados.sort(function(a, b){return b["newDeaths"] - a["newDeaths"]})[0];
+                var maiorNumeroMortes = todosDados.sort(function(a, b){return b["newDeaths"] - a["newDeaths"]})[0]["newDeaths"];
+                var maiorNumeroCasos = todosDados.sort(function(a, b){return b["newCases"] - a["newCases"]})[0]["newCases"];
 
-                console.log(maiorNumeroMortes);
-                console.log(maiorNumeroCasos);
                 
+                var totalMortes = results[0]["Deaths"] 
+                var totalCasos = results[0]["Confirmed"]
+
+                app.db('dados_do_mes')
+                    .insert({
+                    'totalDeaths': totalMortes, 
+                    'biggerNewDeaths': maiorNumeroMortes,
+                    'Date': new Date(),
+                    'totalConfirmed': totalCasos,
+                    'biggerNewCases': maiorNumeroCasos,
+                    'latitude': latitude, 
+                    'longitude': longitude})
+                    .then(() => res.send())
+                    .catch(err => res.send(err))
+                
+                    res.json({totalMortes, maiorNumeroMortes, totalCasos, maiorNumeroCasos, results})
 
               })
 
