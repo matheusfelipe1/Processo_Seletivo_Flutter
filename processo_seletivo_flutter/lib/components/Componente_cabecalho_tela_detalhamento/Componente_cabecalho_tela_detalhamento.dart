@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:processo_seletivo_flutter/components/pages/Tela_graficos_detalhamento.dart';

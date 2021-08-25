@@ -38,6 +38,7 @@ class _ListaState extends State<Lista> {
                               data: widget.renderizaDados[indice]['Date'],
                             ))),
                     child: ListTile(
+                        leading: Icon(Icons.coronavirus),
                         title: Text(pais.toString()),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
