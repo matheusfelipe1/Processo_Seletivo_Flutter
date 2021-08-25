@@ -11,7 +11,7 @@ module.exports = app => {
             await connections.query('TRUNCATE TABLE covidbrasil', function (error, results) {
                 if(error) return res.send(error)
             })
-            await axios.get(`https://api.covid19api.com/country/brazil?from=${dataParaSubtrair.getFullYear()}-${dataParaSubtrair.getMonth() - 5}-${dataParaSubtrair.getDate()}T00:00:00Z&to="${dataHoje}T00:00:00Z`)
+            await axios.get(`https://api.covid19api.com/country/brazil?from=${dataParaSubtrair.getFullYear()}-${dataParaSubtrair.getMonth() - 5}-${dataParaSubtrair.getDate()}T00:00:00Z&to="${dataHoje}T00:00:00Z&to=${dataHoje}T00:00:00Z`)
                 .then(resposta => {                
                     app.db('covidbrasil')
                     .insert(resposta.data)
@@ -27,12 +27,10 @@ module.exports = app => {
                         })
                     }).catch(err => res.send(err))
                 })
-
         }else {
             return res.send('Data não pode ser nula!')
         }
     }  
-
     const mediaDeMortes = async (req, res) => {
                 var valorData = {...req.body}
                 var data = `${valorData.data}T00:00:00Z` //esta é a data principal, a outra é apenas um calculo de 14 dias antes para fazer a media movel
@@ -42,7 +40,6 @@ module.exports = app => {
                 var armazenaNovasMortes = []
                 var armazenaNovasConfirmados = []
                 var todosDados = []
-                var valorResultado = []
                 var totalMortes
                 var totalNovosCasos
                 var mediaMovelMortes 
@@ -58,21 +55,17 @@ module.exports = app => {
                             novosCasos.push(dados['Confirmed'])
                             novosMortes.push(dados['Deaths'])
                         })
-
                         todosDados.push(results)
                         for(var i = 0; i < results.length; i++) {
                             armazenaNovasConfirmados.push(novosCasos[i] - novosCasos[i+1])
                             armazenaNovasMortes.push(novosMortes[i] - novosMortes[i+1])
-                            
                         }
                         results.pop()
-                        
                         /*
                         No algoritmo acima eu tive que gerar os dados das mortes e casos diários,
                         e nessa funcao eu tive que pegar o proximo indice e subtrair pelo atual indice,
                         como esta retornando em ordem decrescente, então tive que usar uma operação inversa
                         para buscar os dados de mortes e novos casos diários
-
                         */
                         armazenaNovasMortes.pop() 
                         armazenaNovasConfirmados.pop() 
@@ -90,7 +83,6 @@ module.exports = app => {
                                 .then(() => res.send())
                                 .catch((err) => res.send(err))
                         })
-
                         app.db('media_movel_datas_respectivas')
                             .insert({'moving_average': mediaMovelMortes, 'Date': data, 'totalDeath': totalMortes, 'totalCasesConfirmed': totalNovosCasos })
                             .then(() => res.send())
@@ -99,17 +91,10 @@ module.exports = app => {
                         res.json({mediaMovelMortes, mediaMovelConfirmados, totalMortes, totalNovosCasos})
                     })
 
-
                 } else {
                     return res.send('Data não pode ser nula!')
                 }
-                
-
-
-   
-
     } 
-
     const buscarDadosDasMedias = async (req, res) => {
         var valorData = {...req.body}
         var data = `${valorData.data}T00:00:00Z`
@@ -118,38 +103,29 @@ module.exports = app => {
         var dadosParaCalcularMedia = []
         var acumuladoMediaMovel;
         if(valorData.toString() != null || valorData.toString().length != 0) {
-            
             connections.query('SELECT moving_average FROM media_movel_datas_respectivas', function (error, results){
                 if(error) return res.send(error)
                 results.forEach((value, index) => {
                      mediaMovelMortes.push(value["moving_average"])
                 }) 
-                
                acumuladoMediaMovel = mediaMovelMortes.reduce((value, index) => value + index, 0)
                Number (acumuladoMediaMovel)
             })
-
             await app.db('dados_medias_solicitadas')
                 .select('Country', 'Date', 'newDeaths', 'Deaths', 'Confirmed', 'newCases')
                 .orderBy('Date', 'desc')
                 .then((resp) => dadosParaCalcularMedia.push(resp))
                 .catch(err => res.send(err))
-            
-            
             await app.db('covidbrasil')
                 .select('Country', 'Date', 'Deaths', 'Confirmed', 'Recovered')
                 .where({'Date': data})
                 .then((resp) => dadosObjetoSelecionado = resp)
                 .catch(err => res.send(err))
-
-
             res.json({acumuladoMediaMovel, mediaMovelMortes, dadosObjetoSelecionado, dadosParaCalcularMedia})
         }else {
             return res.send('Data não pode ser nula!')
         }   
-
     }
-
     const dadosDoMes = async (req, res) => {
         var mes = new Date().getMonth();
         var ano = new Date().getFullYear();
@@ -172,7 +148,6 @@ module.exports = app => {
                     novosCasos.push(dados['Confirmed'])
                     novosMortes.push(dados['Deaths'])
                 })
-
                 console.log(results.length);
                 console.log(dataReq);
                 for(var i = 0; i < results.length; i++) {
@@ -183,21 +158,16 @@ module.exports = app => {
                 }
                 mortesDaUltimaAtualizacao =  armazenaNovasMortes[0]           
                 casosDaUltimaAtualizacao =  armazenaNovasConfirmados[0]           
-               
                 /*
                 No algoritmo acima eu tive que gerar os dados das mortes e casos diários,
                 e nessa funcao eu tive que pegar o proximo indice e subtrair pelo atual indice,
                 como esta retornando em ordem decrescente, então tive que usar uma operação inversa
                 para buscar os dados de mortes e novos casos diários
-
                 */
-                
                 todosDados.pop()
                 
                 var maiorNumeroMortes = todosDados.sort(function(a, b){return b["newDeaths"] - a["newDeaths"]})[0]["newDeaths"];
                 var maiorNumeroCasos = todosDados.sort(function(a, b){return b["newCases"] - a["newCases"]})[0]["newCases"];
-
-                
                 var totalMortes = results[0]["Deaths"] 
                 var totalCasos = results[0]["Confirmed"]
 
@@ -216,9 +186,6 @@ module.exports = app => {
                     res.json({totalMortes, mortesDaUltimaAtualizacao, casosDaUltimaAtualizacao , maiorNumeroMortes, totalCasos, maiorNumeroCasos, results})
 
               })
-
-        
     }
-
     return {mostraTodos, mediaDeMortes, buscarDadosDasMedias, dadosDoMes}
 }
