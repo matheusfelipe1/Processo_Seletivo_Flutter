@@ -1,5 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:processo_seletivo_flutter/components/model/model_grafico/Model_grafico_mes.dart';
 
 class ComponenteGraficoMes extends StatelessWidget {
   final variavelA;
@@ -18,7 +19,7 @@ class ComponenteGraficoMes extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<OrdinalSales, String>> _createSampleData(
+  static List<charts.Series<GraficoMes, String>> _createSampleData(
     var variavelA,
     var variavelB,
     String varA,
@@ -26,26 +27,18 @@ class ComponenteGraficoMes extends StatelessWidget {
   ) {
     print(variavelA);
     final data = [
-      new OrdinalSales(varB, variavelB),
-      new OrdinalSales(varA, variavelA),
+      new GraficoMes(varB, variavelB),
+      new GraficoMes(varA, variavelA),
     ];
 
     return [
-      new charts.Series<OrdinalSales, String>(
+      new charts.Series<GraficoMes, String>(
         id: 'Sales',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (OrdinalSales sales, _) => sales.year,
-        measureFn: (OrdinalSales sales, _) => sales.sales,
+        domainFn: (GraficoMes sales, _) => sales.year,
+        measureFn: (GraficoMes sales, _) => sales.sales,
         data: data,
       )
     ];
   }
-}
-
-/// Sample ordinal data type.
-class OrdinalSales {
-  final String year;
-  final int sales;
-
-  OrdinalSales(this.year, this.sales);
 }
