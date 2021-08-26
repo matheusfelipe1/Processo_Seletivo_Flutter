@@ -10,7 +10,7 @@ class ComponenteDialogGraficoMes extends StatelessWidget {
         margin: EdgeInsets.only(top: 5, bottom: 5),
         child: Wrap(
           children: [
-            Text(chave),
+            Text("$chave: "),
             Text("$valor", style: TextStyle(fontWeight: FontWeight.bold))
           ],
         ));
