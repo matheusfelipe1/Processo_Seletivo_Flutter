@@ -36,7 +36,7 @@ class _BottomNavigationRouteState extends State<BottomNavigationRoute> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.today),
-            label: "Hoje",
+            label: "Mês",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.graphic_eq),

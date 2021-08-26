@@ -76,17 +76,20 @@ class _TelaGraficosDetalhamentoState extends State<TelaGraficosDetalhamento> {
                             ],
                           ),
                           actions: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                actionsAlerta(
-                                    Colors.black, 'Média Movel de Mortes'),
-                                actionsAlerta(Colors.yellow,
-                                    'Média Movel de Novos Casos'),
-                                actionsAlerta(
-                                    Colors.blue, 'Total de Novos Casos'),
-                                actionsAlerta(Colors.red, 'Total de Mortes'),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  actionsAlerta(
+                                      Colors.black, 'Média Movel de Mortes'),
+                                  actionsAlerta(Colors.yellow,
+                                      'Média Movel de Novos Casos'),
+                                  actionsAlerta(
+                                      Colors.blue, 'Total de Novos Casos'),
+                                  actionsAlerta(Colors.red, 'Total de Mortes'),
+                                ],
+                              ),
                             )
                           ]),
                     );
